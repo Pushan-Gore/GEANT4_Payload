@@ -1,0 +1,57 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.9~svn20110310	//
+AddEdep	include/B1EventAction.hh	/^    void AddEdep(G4double edep) { fEdep += edep; }$/;"	f	class:B1EventAction
+AddEdep	src/B1RunAction.cc	/^void B1RunAction::AddEdep(G4double edep)$/;"	f	class:B1RunAction
+B1ActionInitialization	include/B1ActionInitialization.hh	/^class B1ActionInitialization : public G4VUserActionInitialization$/;"	c
+B1ActionInitialization	src/B1ActionInitialization.cc	/^B1ActionInitialization::B1ActionInitialization()$/;"	f	class:B1ActionInitialization
+B1ActionInitialization_h	include/B1ActionInitialization.hh	32;"	d
+B1DetectorConstruction	include/B1DetectorConstruction.hh	/^class B1DetectorConstruction : public G4VUserDetectorConstruction$/;"	c
+B1DetectorConstruction	src/B1DetectorConstruction.cc	/^B1DetectorConstruction::B1DetectorConstruction()$/;"	f	class:B1DetectorConstruction
+B1DetectorConstruction_h	include/B1DetectorConstruction.hh	32;"	d
+B1EventAction	include/B1EventAction.hh	/^class B1EventAction : public G4UserEventAction$/;"	c
+B1EventAction	src/B1EventAction.cc	/^B1EventAction::B1EventAction(B1RunAction* runAction)$/;"	f	class:B1EventAction
+B1EventAction_h	include/B1EventAction.hh	32;"	d
+B1PrimaryGeneratorAction	include/B1PrimaryGeneratorAction.hh	/^class B1PrimaryGeneratorAction : public G4VUserPrimaryGeneratorAction$/;"	c
+B1PrimaryGeneratorAction	src/B1PrimaryGeneratorAction.cc	/^B1PrimaryGeneratorAction::B1PrimaryGeneratorAction()$/;"	f	class:B1PrimaryGeneratorAction
+B1PrimaryGeneratorAction_h	include/B1PrimaryGeneratorAction.hh	32;"	d
+B1RunAction	include/B1RunAction.hh	/^class B1RunAction : public G4UserRunAction$/;"	c
+B1RunAction	src/B1RunAction.cc	/^B1RunAction::B1RunAction()$/;"	f	class:B1RunAction
+B1RunAction_h	include/B1RunAction.hh	32;"	d
+B1SteppingAction	include/B1SteppingAction.hh	/^class B1SteppingAction : public G4UserSteppingAction$/;"	c
+B1SteppingAction	src/B1SteppingAction.cc	/^B1SteppingAction::B1SteppingAction(B1EventAction* eventAction)$/;"	f	class:B1SteppingAction
+B1SteppingAction_h	include/B1SteppingAction.hh	32;"	d
+BeginOfEventAction	src/B1EventAction.cc	/^void B1EventAction::BeginOfEventAction(const G4Event*)$/;"	f	class:B1EventAction
+BeginOfRunAction	src/B1RunAction.cc	/^void B1RunAction::BeginOfRunAction(const G4Run*)$/;"	f	class:B1RunAction
+Build	src/B1ActionInitialization.cc	/^void B1ActionInitialization::Build() const$/;"	f	class:B1ActionInitialization
+BuildForMaster	src/B1ActionInitialization.cc	/^void B1ActionInitialization::BuildForMaster() const$/;"	f	class:B1ActionInitialization
+Construct	src/B1DetectorConstruction.cc	/^G4VPhysicalVolume* B1DetectorConstruction::Construct()$/;"	f	class:B1DetectorConstruction
+EndOfEventAction	src/B1EventAction.cc	/^void B1EventAction::EndOfEventAction(const G4Event*)$/;"	f	class:B1EventAction
+EndOfRunAction	src/B1RunAction.cc	/^void B1RunAction::EndOfRunAction(const G4Run* run)$/;"	f	class:B1RunAction
+G4EXLIB	GNUmakefile	/^G4EXLIB := true$/;"	m
+G4INSTALL	GNUmakefile	/^  G4INSTALL = ..\/..\/..$/;"	m
+G4TARGET	GNUmakefile	/^G4TARGET := $(name)$/;"	m
+GeneratePrimaries	src/B1PrimaryGeneratorAction.cc	/^void B1PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)$/;"	f	class:B1PrimaryGeneratorAction
+GetParticleGun	include/B1PrimaryGeneratorAction.hh	/^    const G4ParticleGun* GetParticleGun() const { return fParticleGun; }$/;"	f	class:B1PrimaryGeneratorAction
+GetScoringVolume	include/B1DetectorConstruction.hh	/^    G4LogicalVolume* GetScoringVolume() const { return fScoringVolume; }$/;"	f	class:B1DetectorConstruction
+UserSteppingAction	src/B1SteppingAction.cc	/^void B1SteppingAction::UserSteppingAction(const G4Step* step)$/;"	f	class:B1SteppingAction
+fEdep	include/B1EventAction.hh	/^    G4double     fEdep;$/;"	m	class:B1EventAction
+fEdep	include/B1RunAction.hh	/^    G4Accumulable<G4double> fEdep;$/;"	m	class:B1RunAction
+fEdep2	include/B1RunAction.hh	/^    G4Accumulable<G4double> fEdep2;$/;"	m	class:B1RunAction
+fEnvelopeBox	include/B1PrimaryGeneratorAction.hh	/^    G4Box* fEnvelopeBox;$/;"	m	class:B1PrimaryGeneratorAction
+fEventAction	include/B1SteppingAction.hh	/^    B1EventAction*  fEventAction;$/;"	m	class:B1SteppingAction
+fParticleGun	include/B1PrimaryGeneratorAction.hh	/^    G4ParticleGun*  fParticleGun; \/\/ pointer a to G4 gun class$/;"	m	class:B1PrimaryGeneratorAction
+fRunAction	include/B1EventAction.hh	/^    B1RunAction* fRunAction;$/;"	m	class:B1EventAction
+fScoringVolume	include/B1DetectorConstruction.hh	/^    G4LogicalVolume*  fScoringVolume;$/;"	m	class:B1DetectorConstruction
+fScoringVolume	include/B1SteppingAction.hh	/^    G4LogicalVolume* fScoringVolume;$/;"	m	class:B1SteppingAction
+main	exampleB1.cc	/^int main(int argc,char** argv)$/;"	f
+name	GNUmakefile	/^name := exampleB1$/;"	m
+~B1ActionInitialization	src/B1ActionInitialization.cc	/^B1ActionInitialization::~B1ActionInitialization()$/;"	f	class:B1ActionInitialization
+~B1DetectorConstruction	src/B1DetectorConstruction.cc	/^B1DetectorConstruction::~B1DetectorConstruction()$/;"	f	class:B1DetectorConstruction
+~B1EventAction	src/B1EventAction.cc	/^B1EventAction::~B1EventAction()$/;"	f	class:B1EventAction
+~B1PrimaryGeneratorAction	src/B1PrimaryGeneratorAction.cc	/^B1PrimaryGeneratorAction::~B1PrimaryGeneratorAction()$/;"	f	class:B1PrimaryGeneratorAction
+~B1RunAction	src/B1RunAction.cc	/^B1RunAction::~B1RunAction()$/;"	f	class:B1RunAction
+~B1SteppingAction	src/B1SteppingAction.cc	/^B1SteppingAction::~B1SteppingAction()$/;"	f	class:B1SteppingAction
