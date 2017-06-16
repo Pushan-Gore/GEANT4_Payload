@@ -23,42 +23,37 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-// $Id: B1DetectorConstruction.hh 69565 2013-05-08 12:35:31Z gcosmo $
+// $Id: B5HodoscopeSD.hh 101036 2016-11-04 09:00:23Z gcosmo $
 //
-/// \file B1DetectorConstruction.hh
-/// \brief Definition of the B1DetectorConstruction class
+/// \file B5HodoscopeSD.hh
+/// \brief Definition of the B5HodoscopeSD class
 
-#ifndef B1DetectorConstruction_h
-#define B1DetectorConstruction_h 1
+#ifndef B5HodoscopeSD_h
+#define B5HodoscopeSD_h 1
 
-#include "G4VUserDetectorConstruction.hh"
-#include "globals.hh"
+#include "G4VSensitiveDetector.hh"
+#include "B5HodoscopeHit.hh"
 
-class G4VPhysicalVolume;
-class G4VSensitiveDetector;
-class G4LogicalVolume;
+class G4Step;
+class G4HCofThisEvent;
+class G4TouchableHistory;
 
-/// Detector construction class to define materials and geometry.
+/// Hodoscope sensitive detector
 
-class B1DetectorConstruction : public G4VUserDetectorConstruction
+class B5HodoscopeSD : public G4VSensitiveDetector
 {
   public:
-    B1DetectorConstruction();
-    virtual ~B1DetectorConstruction();
-
-    virtual G4VPhysicalVolume* Construct();
-    virtual void ConstructSDandField();
+    B5HodoscopeSD(G4String name);
+    virtual ~B5HodoscopeSD();
     
-    G4LogicalVolume* GetScoringVolume() const { return fScoringVolume; }
-
-  protected:
-    G4LogicalVolume*  fScoringVolume;
-
+    virtual void Initialize(G4HCofThisEvent*HCE);
+    virtual G4bool ProcessHits(G4Step*aStep,G4TouchableHistory*ROhist);
+    
   private:
-    G4LogicalVolume* logicpl_detector;
+    B5HodoscopeHitsCollection* fHitsCollection;
+    G4int fHCID;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 #endif
-

@@ -38,6 +38,7 @@
 #endif
 
 #include "G4UImanager.hh"
+#include "FTFP_BERT.hh"
 #include "QBBC.hh"
 
 #include "G4VisExecutive.hh"
@@ -73,7 +74,7 @@ int main(int argc,char** argv)
   runManager->SetUserInitialization(new B1DetectorConstruction());
 
   // Physics list
-  G4VModularPhysicsList* physicsList = new QBBC;
+  G4VModularPhysicsList* physicsList = new FTFP_BERT;// Changed from QBBC
   physicsList->SetVerboseLevel(1);
   runManager->SetUserInitialization(physicsList);
     
@@ -92,10 +93,12 @@ int main(int argc,char** argv)
 
   // Process macro or start UI session
   //
+  //printf("ui%s",ui);
   if ( ! ui ) { 
     // batch mode
     G4String command = "/control/execute ";
     G4String fileName = argv[1];
+    printf("Filename %s\n", argv[1]);
     UImanager->ApplyCommand(command+fileName);
   }
   else { 
