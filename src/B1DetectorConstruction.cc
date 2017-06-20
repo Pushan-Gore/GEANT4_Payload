@@ -76,7 +76,7 @@ G4VPhysicalVolume* B1DetectorConstruction::Construct()
 
   density = 1e-25*g/cm3;
   pressure = 1.e-19*pascal;
-  temperature = 0.1*kelvin;
+  temperature = 273*kelvin;
   G4Material* world_mat = new G4Material(name="Galactic", z=1., a=1.01*g/mole,
           density, kStateGas, temperature, pressure);
   //G4Material* world_mat = nist->FindOrBuildMaterial("G4_AIR");
@@ -102,7 +102,47 @@ G4VPhysicalVolume* B1DetectorConstruction::Construct()
    
   // Plastic Detector
   G4Material* pl_detector_mat = nist->FindOrBuildMaterial("G4_PLASTIC_SC_VINYLTOLUENE");
+  //G4Material* pl_detector_mat = nist->FindOrBuildMaterial("G4_CESIUM_IODIDE");
   G4ThreeVector pos = G4ThreeVector(0, 0, 0);
+ 
+  const G4int NUMENTRIES = 9;
+  G4double Scnt_PP[NUMENTRIES] = { 6.6*eV, 6.7*eV, 6.8*eV, 6.9*eV,
+      7.0*eV, 7.1*eV, 7.2*eV, 7.3*eV, 7.4*eV };
+  G4double Scnt_FAST[NUMENTRIES] = { 0.000134, 0.004432,
+       0.053991, 0.241971,
+       0.398942, 0.000134,
+        0.004432, 0.053991,
+        0.241971 };
+  G4double Scnt_SLOW[NUMENTRIES] = { 0.000010, 0.000020,
+       0.000030, 0.004000,
+       0.008000, 0.005000,
+        0.020000, 0.001000,
+        0.000010 };
+  G4double Scnt_RINDEX[NUMENTRIES] = { 1.58, 1.58, 1.58, 1.58,
+        1.58, 1.58, 1.58, 1.58, 1.58};
+  G4MaterialPropertiesTable* Scnt_MPT = new G4MaterialPropertiesTable();
+  Scnt_MPT->AddProperty("FASTCOMPONENT", Scnt_PP, Scnt_FAST, NUMENTRIES);
+  Scnt_MPT->AddProperty("SLOWCOMPONENT", Scnt_PP, Scnt_SLOW, NUMENTRIES);
+  Scnt_MPT->AddProperty("RINDEX", Scnt_PP, Scnt_RINDEX, NUMENTRIES)->SetSpline(true);
+  Scnt_MPT->AddConstProperty("SCINTILLATIONYIELD", 11000./MeV);        // 5000./Mev
+  Scnt_MPT->AddConstProperty("RESOLUTIONSCALE", 2.0);
+  Scnt_MPT->AddConstProperty("FASTTIMECONSTANT", 1.*ns);
+  Scnt_MPT->AddConstProperty("SLOWTIMECONSTANT", 10.*ns);
+  Scnt_MPT->AddConstProperty("YIELDRATIO", 0.8);
+  pl_detector_mat->SetMaterialPropertiesTable(Scnt_MPT);
+
+ /* 
+  const G4int NUMENTRIES = 32;
+  G4double ppckov[NUMENTRIES] = {2.034*eV, ......, 4.136*eV};
+  G4double rindex[NUMENTRIES] = {1.3435, ......, 1.3608};
+  G4double absorption[NUMENTRIES] = {344.8*cm, ......, 1450.0*cm];
+  G4MaterialPropertiesTable *MPT = new G4MaterialPropertiesTable();
+
+  MPT -> AddConstProperty("SCINTILLATIONYIELD",100./MeV);
+  MPT -> AddProperty("RINDEX"<Plug>PeepOpenpckov,rindex,NUMENTRIES}->SetSpline(true);
+  MPT -> AddProperty("ABSLENGTH"<Plug>PeepOpenpckov,absorption,NUMENTRIES}->SetSpline(true);
+  pl_detector_mat-> SetMaterialPropertiesTable(MPT);
+  */
 
   // Box Shape shape       
   G4double pl_detector_dx = 5*cm;
@@ -144,7 +184,9 @@ void B1DetectorConstruction::ConstructSDandField()
     auto sdManager = G4SDManager::GetSDMpointer();
     G4String SDname;
          
-    G4VSensitiveDetector* hodoscope = new B5HodoscopeSD(SDname="pl_detector");
+    G4VSensitiveDetector* hodoscope = new B5HodoscopeSD(SDname="/pl_detector");
+    //if(hodoscope) 
+    //    G4cout << "Hodoscope not null";
     sdManager->AddNewDetector(hodoscope);
     logicpl_detector->SetSensitiveDetector(hodoscope);
 }

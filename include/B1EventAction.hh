@@ -53,6 +53,7 @@ class B1EventAction : public G4UserEventAction
   private:
     B1RunAction* fRunAction;
     G4double     fEdep;
+    G4int fHodHCID;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

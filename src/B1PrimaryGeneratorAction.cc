@@ -57,7 +57,7 @@ B1PrimaryGeneratorAction::B1PrimaryGeneratorAction()
     = particleTable->FindParticle(particleName="e-");
   fParticleGun->SetParticleDefinition(particle);
   fParticleGun->SetParticleMomentumDirection(G4ThreeVector(0.,0.,-1.));
-  fParticleGun->SetParticleEnergy(6.*MeV);          //This is to be changed
+  fParticleGun->SetParticleEnergy(10.*keV);          //This is to be changed
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -103,9 +103,9 @@ void B1PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
   }*/
 
   G4ExceptionDescription msg;
-  G4double size = 1; 
-  G4double x0 = size * (G4UniformRand()-0.5);
-  G4double y0 = size * (G4UniformRand()-0.5);
+  G4double size = 10; 
+  G4double x0 = size * (G4UniformRand());
+  G4double y0 = size * (G4UniformRand());
   //G4double z0 = -0.5 * envSizeZ;
 
   msg << "Random message generated was :" << G4UniformRand();
