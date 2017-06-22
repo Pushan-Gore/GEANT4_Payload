@@ -10,10 +10,11 @@
 /run/initialize
 /run/printProgress
 #
-/control/verbose 1
-/run/verbose 1
-/event/verbose 1
-/tracking/verbose 3
+/control/verbose 0
+/run/verbose 0
+#/event/verbose 1
+/tracking/verbose 2 
+/hits/verbose 1
 #/tracking/storeTrajectory 3
 # 
 # gamma 6 MeV to the direction (0.,0.,1.)
@@ -31,16 +32,16 @@
 #
 #/run/beamOn 1
 
-/gun/particle proton
-/gun/energy 10 keV
+#/gun/particle proton
+#/gun/energy 10 keV
 #
-/run/beamOn 1
+#/run/beamOn 1
 
-/hits/list
+#/hits/list
 
 
 /gun/particle e-
-/gun/energy 10 keV
+/gun/energy 15 keV
 
 /run/beamOn 1 
 

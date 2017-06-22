@@ -56,6 +56,8 @@ class B1DetectorConstruction : public G4VUserDetectorConstruction
 
   private:
     G4LogicalVolume* logicpl_detector;
+    G4double lambda_min ;                                                         
+    G4double lambda_max ;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
