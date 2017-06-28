@@ -44,7 +44,6 @@
 #include "G4SDManager.hh"
 #include "G4VSensitiveDetector.hh"
 #include "G4PhysicalConstants.hh" 
-//#include "PhysicalConstants.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -72,13 +71,13 @@ G4VPhysicalVolume* B1DetectorConstruction::Construct()
   G4bool checkOverlaps = true;
 
   // World
-  G4double world_sizeXY = 20*cm;
-  G4double world_sizeZ  = 100*cm;
+  G4double world_sizeXY = 200*cm;
+  G4double world_sizeZ  = 1000*cm;
   G4double a, z, density;
   G4double temperature, pressure;
   G4String name;
 
-  density = universe_mean_density;//1e-25*g/cm3;
+  density = universe_mean_density;
   pressure = 3.e-18*pascal;
   temperature = 2.73*kelvin;
   G4Material* world_mat = new G4Material(name="Galactic", z=1., a=1.01*g/mole,
@@ -86,36 +85,38 @@ G4VPhysicalVolume* B1DetectorConstruction::Construct()
   //G4Material* world_mat = nist->FindOrBuildMaterial("G4_AIR");
 
   /* Added to test RINDEX of vacuum */
-    /*
-  const G4int N_RINDEX_QUARTZ = 2 ;                                             
-  G4double X_RINDEX_QUARTZ[N_RINDEX_QUARTZ] = {h_Planck*c_light/lambda_max, h_Planck*c_light/lambda_min} ; 
-  G4double RINDEX_QUARTZ[N_RINDEX_QUARTZ] = {1, 1};                       
+ 
+  const G4int N_RINDEX_VAC = 2 ;                                             
+  G4double X_RINDEX_VAC[N_RINDEX_VAC] = {h_Planck*c_light/lambda_max, h_Planck*c_light/lambda_min} ; 
+  G4double RINDEX_VAC[N_RINDEX_VAC] = {1, 1};                       
    
   G4MaterialPropertiesTable *MPT_PMT = new G4MaterialPropertiesTable();         
-  MPT_PMT->AddProperty("RINDEX", X_RINDEX_QUARTZ, RINDEX_QUARTZ, N_RINDEX_QUARTZ);
+  MPT_PMT->AddProperty("RINDEX", X_RINDEX_VAC, RINDEX_VAC, N_RINDEX_VAC);
+  MPT_PMT->DumpTable();
                                                                                  
-  world_mat->SetMaterialPropertiesTable(MPT_PMT);   */
+  world_mat->SetMaterialPropertiesTable(MPT_PMT);   
+
   /* Remove block till here */
 
 
   G4Box* solidWorld =    
-      new G4Box("World",                          //its name
+      new G4Box("World",                                                //its name
               0.5*world_sizeXY, 0.5*world_sizeXY, 0.5*world_sizeZ);     //its size
 
   G4LogicalVolume* logicWorld =                         
-      new G4LogicalVolume(solidWorld,             //its solid
-              world_mat,              //its material
-              "World");               //its name
+      new G4LogicalVolume(solidWorld,                                   //its solid
+              world_mat,                                                //its material
+              "World");                                                 //its name
 
   G4VPhysicalVolume* physWorld = 
-      new G4PVPlacement(0,                        //no rotation
-              G4ThreeVector(),          //at (0,0,0)
-              logicWorld,               //its logical volume
-              "World",                  //its name
-              0,                        //its mother  volume
-              false,                    //no boolean operation
-              0,                        //copy number
-              checkOverlaps);           //overlaps checking
+      new G4PVPlacement(0,                                              //no rotation
+              G4ThreeVector(),                                          //at (0,0,0)
+              logicWorld,                                               //its logical volume
+              "World",                                                  //its name
+              0,                                                        //its mother  volume
+              false,                                                    //no boolean operation
+              0,                                                        //copy number
+              checkOverlaps);                                           //overlaps checking
 
   // Plastic Detector
   //G4Material* pl_detector_mat = nist->FindOrBuildMaterial("G4_PLASTIC_SC_VINYLTOLUENE");
@@ -123,10 +124,10 @@ G4VPhysicalVolume* B1DetectorConstruction::Construct()
   G4ThreeVector pos = G4ThreeVector(0, 0, 0);
 
   const G4int NUMENTRIES = 2;
-  G4double Scnt_PP[NUMENTRIES] = { 6.6*eV, 7.4*eV };
+  G4double Scnt_PP[NUMENTRIES] = { h_Planck*c_light/lambda_max, h_Planck*c_light/lambda_min};//6.6*eV, 7.4*eV };
       //6.6*eV, 6.7*eV, 6.8*eV, 6.9*eV,
      // 7.0*eV, 7.1*eV, 7.2*eV, 7.3*eV, 7.4*eV };
-  G4double Scnt_FAST[NUMENTRIES] = { 0.000134, 0.241971 };
+  G4double Scnt_FAST[NUMENTRIES] = { 0.0, 1.0 };
      // 0.000134, 0.004432,
      // 0.053991, 0.241971,
      // 0.398942, 0.000134,
@@ -145,8 +146,9 @@ G4VPhysicalVolume* B1DetectorConstruction::Construct()
   //,4.74*cm,4.74*cm,
    //   4.74*cm,4.74*cm,4.74*cm,4.74*cm,4.74*cm,};
   G4MaterialPropertiesTable* Scnt_MPT = new G4MaterialPropertiesTable();
-  Scnt_MPT->AddProperty("FASTCOMPONENT", Scnt_PP, Scnt_FAST, NUMENTRIES);
-  Scnt_MPT->AddProperty("SLOWCOMPONENT", Scnt_PP, Scnt_SLOW, NUMENTRIES);
+  //Scnt_MPT->AddProperty("FASTCOMPONENT", Scnt_PP, Scnt_FAST, NUMENTRIES);
+  //Scnt_MPT->AddProperty("SLOWCOMPONENT", Scnt_PP, Scnt_SLOW, NUMENTRIES);
+  Scnt_MPT->AddProperty("SCINTILLATION", Scnt_PP, Scnt_FAST, NUMENTRIES);
   Scnt_MPT->AddProperty("ABSLENGTH", Scnt_PP, Scnt_absorption,NUMENTRIES)->SetSpline(true);
   Scnt_MPT->AddProperty("RINDEX", Scnt_PP, Scnt_RINDEX, NUMENTRIES)->SetSpline(true);
   Scnt_MPT->AddConstProperty("SCINTILLATIONYIELD", 54000./MeV);        // 5000./Mev
@@ -157,24 +159,12 @@ G4VPhysicalVolume* B1DetectorConstruction::Construct()
 
   Scnt_MPT->DumpTable();
   pl_detector_mat->SetMaterialPropertiesTable(Scnt_MPT);
-
-  /* 
-     const G4int NUMENTRIES = 32;
-     G4double ppckov[NUMENTRIES] = {2.034*eV, ......, 4.136*eV};
-     G4double rindex[NUMENTRIES] = {1.3435, ......, 1.3608};
-     G4double absorption[NUMENTRIES] = {344.8*cm, ......, 1450.0*cm];
-     G4MaterialPropertiesTable *MPT = new G4MaterialPropertiesTable();
-
-     MPT -> AddConstProperty("SCINTILLATIONYIELD",100./MeV);
-     MPT -> AddProperty("RINDEX"<Plug>PeepOpenpckov,rindex,NUMENTRIES}->SetSpline(true);
-     MPT -> AddProperty("ABSLENGTH"<Plug>PeepOpenpckov,absorption,NUMENTRIES}->SetSpline(true);
-     pl_detector_mat-> SetMaterialPropertiesTable(MPT);
-     */
+  pl_detector_mat->GetIonisation()->SetBirksConstant(0.025498*mm/MeV);
 
   // Box Shape shape       
   G4double pl_detector_dx = 5*cm;
   G4double pl_detector_dy = 5*cm;
-  G4double pl_detector_dz = 4.74*cm;           //Detector Thickness      
+  G4double pl_detector_dz = 4.74*cm;        //Detector Thickness      
 
   G4Box* solidpl_detector =
   new G4Box("pl_detector",
@@ -184,17 +174,17 @@ G4VPhysicalVolume* B1DetectorConstruction::Construct()
 
 logicpl_detector =                         
 new G4LogicalVolume(solidpl_detector,       //its solid
-        pl_detector_mat,        //its material
-        "pl_detector");         //its name
+        pl_detector_mat,                    //its material
+        "pl_detector");                     //its name
 
-new G4PVPlacement(0,                          //no rotation
-        pos,                        //at position
-        logicpl_detector,           //its logical volume
-        "pl_detector",              //its name
-        logicWorld,                 //its mother  volume
-        false,                      //no boolean operation
-        0,                          //copy number
-        checkOverlaps);             //overlaps checking
+new G4PVPlacement(0,                        //no rotation
+        pos,                                //at position
+        logicpl_detector,                   //its logical volume
+        "pl_detector",                      //its name
+        logicWorld,                         //its mother  volume
+        false,                              //no boolean operation
+        0,                                  //copy number
+        checkOverlaps);                     //overlaps checking
 
 // Set pl_detector as scoring volume
 fScoringVolume = logicpl_detector;
