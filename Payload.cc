@@ -29,7 +29,11 @@
 /// \brief Main program of the B1 example
 
 #include "B1DetectorConstruction.hh"
+
 #include "OpNovicePhysicsList.hh"
+#include "LXePhysicsList.hh"
+#include "PhysicsList.hh"  
+
 #include "B1ActionInitialization.hh"
 
 #ifdef G4MULTITHREADED
@@ -72,10 +76,13 @@ int main(int argc,char** argv)
   runManager->SetUserInitialization(new B1DetectorConstruction());
 
   // 2. Physics list
-  //G4VModularPhysicsList* physicsList = new FTFP_BERT;// Changed from QBBC
+  //G4VModularPhysicsList* physicsList = new FTFP_BERT_EMY;// Changed from QBBC
   //physicsList->SetVerboseLevel(1);
   //runManager->SetUserInitialization(physicsList);
-  runManager->SetUserInitialization(new OpNovicePhysicsList());
+  //runManager->SetUserInitialization(new OpNovicePhysicsList());
+  runManager->SetUserInitialization(new LXePhysicsList());
+  //runManager->SetUserInitialization(new PhysicsList());
+
 
   // 3. User action initialization
   runManager->SetUserInitialization(new B1ActionInitialization());

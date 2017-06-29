@@ -17,6 +17,7 @@
 /tracking/verbose 2 
 /hits/verbose 1
 /process/list
+/cuts/verbose
 #/tracking/storeTrajectory 3
 # 
 # gamma 6 MeV to the direction (0.,0.,1.)

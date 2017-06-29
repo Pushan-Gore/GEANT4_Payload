@@ -118,6 +118,8 @@
 /vis/viewer/set/autoRefresh true
 /vis/verbose warnings
 /process/list
+/cuts/verbose 1
+/hits/verbose 1
 #
 # For file-based drivers, use this to create an empty detector view:
 #/vis/viewer/flush
