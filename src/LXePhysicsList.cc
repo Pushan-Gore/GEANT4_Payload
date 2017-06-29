@@ -23,49 +23,65 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-// $Id: B1ActionInitialization.cc 68058 2013-03-13 14:47:43Z gcosmo $
+// $Id: LXePhysicsList.cc 68752 2013-04-05 10:23:47Z gcosmo $
 //
-/// \file B1ActionInitialization.cc
-/// \brief Implementation of the B1ActionInitialization class
+/// \file optical/LXe/src/LXePhysicsList.cc
+/// \brief Implementation of the LXePhysicsList class
+//
+//
+#include "LXePhysicsList.hh"
 
-#include "B1ActionInitialization.hh"
-#include "B1PrimaryGeneratorAction.hh"
-#include "B1RunAction.hh"
-#include "B1EventAction.hh"
-#include "PayloadSteppingAction.hh"
+#include "LXeGeneralPhysics.hh"
+#include "LXeEMPhysics.hh"
+#include "LXeMuonPhysics.hh"
 
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+#include "G4OpticalPhysics.hh"
+#include "G4OpticalProcessIndex.hh"
 
-B1ActionInitialization::B1ActionInitialization()
- : G4VUserActionInitialization()
-{}
-
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-
-B1ActionInitialization::~B1ActionInitialization()
-{}
+#include "G4SystemOfUnits.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-void B1ActionInitialization::BuildForMaster() const
+LXePhysicsList::LXePhysicsList() : G4VModularPhysicsList()
 {
-  B1RunAction* runAction = new B1RunAction;
-  SetUserAction(runAction);
+  // default cut value  (1.0mm)
+  defaultCutValue = 1.0*mm;
+
+  // General Physics
+  RegisterPhysics( new LXeGeneralPhysics("general") );
+
+  // EM Physics
+  RegisterPhysics( new LXeEMPhysics("standard EM"));
+
+  // Muon Physics
+  RegisterPhysics( new LXeMuonPhysics("muon"));
+
+  // Optical Physics
+  G4OpticalPhysics* opticalPhysics = new G4OpticalPhysics();
+  RegisterPhysics( opticalPhysics );
+
+  opticalPhysics->SetWLSTimeProfile("delta");
+
+  opticalPhysics->SetScintillationYieldFactor(1.0);
+  opticalPhysics->SetScintillationExcitationRatio(1.5);
+
+  //opticalPhysics->SetMaxNumPhotonsPerStep(100);
+  opticalPhysics->SetMaxBetaChangePerStep(10.0);
+
+  opticalPhysics->SetTrackSecondariesFirst(kCerenkov,true);
+  opticalPhysics->SetTrackSecondariesFirst(kScintillation,true);
+
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-void B1ActionInitialization::Build() const
-{
-  SetUserAction(new B1PrimaryGeneratorAction);
-
-  B1RunAction* runAction = new B1RunAction;
-  SetUserAction(runAction);
-  
-  B1EventAction* eventAction = new B1EventAction(runAction);
-  SetUserAction(eventAction);
-  
-  SetUserAction(new OpNoviceSteppingAction(eventAction));
-}  
+LXePhysicsList::~LXePhysicsList() {}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+
+void LXePhysicsList::SetCuts(){
+  //  " G4VUserPhysicsList::SetCutsWithDefault" method sets
+  //   the default cut value for all particle types
+  SetCutsWithDefault();
+  DumpCutValuesTable();
+}

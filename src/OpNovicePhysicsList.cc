@@ -211,38 +211,34 @@ void OpNovicePhysicsList::ConstructEM()
 
         if (particleName == "gamma") { //|| (particleName == "opticalphoton")) {
             // Construct processes for gamma
-            //pmanager->AddDiscreteProcess(new G4GammaConversion());
+            pmanager->AddDiscreteProcess(new G4GammaConversion());
             
-            /*
             G4PhotoElectricEffect* thePhotoElectricEffect = new G4PhotoElectricEffect();
-            //thePhotoElectricEffect->SetEmModel(new G4PenelopePhotoElectricModel());
+            thePhotoElectricEffect->SetEmModel(new G4PenelopePhotoElectricModel());
             pmanager->AddDiscreteProcess(thePhotoElectricEffect);                  
             
             G4ComptonScattering* theComptonScattering = new G4ComptonScattering(); 
-            //theComptonScattering->SetEmModel(new G4PenelopeComptonModel());       
+            theComptonScattering->SetEmModel(new G4PenelopeComptonModel());       
             pmanager->AddDiscreteProcess(theComptonScattering);
 
             G4RayleighScattering* theRayleighScattering = new G4RayleighScattering();
-            //theRayleighScattering->SetEmModel(new G4PenelopeRayleighModel());
+            theRayleighScattering->SetEmModel(new G4PenelopeRayleighModel());
             pmanager->AddDiscreteProcess(theRayleighScattering);
-            */
 
         } else if (particleName == "e-") { 
             // Construct processes for electron
             
-            /*
             pmanager->AddProcess(new G4eMultipleScattering(),-1, -1, 1);// -1, 1, 1);
 
             G4eIonisation* eIonisation =  new G4eIonisation();
-            //eIonisation->SetEmModel(new G4PenelopeIonisationModel());
-            eIonisation->SetStepFunction(0.1, 100*um); // Improved precision in tracking
+            eIonisation->SetEmModel(new G4PenelopeIonisationModel());
+            eIonisation->SetStepFunction(0.2, 100*um); // Improved precision in tracking
             pmanager->AddProcess(eIonisation,        -1, -1, 2);
 
             G4eBremsstrahlung* eBremsstrahlung = new G4eBremsstrahlung();
-            //eBremsstrahlung->SetEmModel(new G4PenelopeBremsstrahlungModel());
+            eBremsstrahlung->SetEmModel(new G4PenelopeBremsstrahlungModel());
             pmanager->AddProcess(eBremsstrahlung, -1, -1, 3);  // -1, 3, 3);
-            pmanager->AddProcess(new G4StepLimiter,               -1,-1, 5);
-            */
+            //pmanager->AddProcess(new G4StepLimiter,               -1,-1, 5);
 
         } else if (particleName == "proton") {}
 
@@ -261,7 +257,7 @@ void OpNovicePhysicsList::ConstructOp() {
         fScintillationProcess      =    new G4Scintillation("Scintillation");
         fScintillationProcess->SetScintillationYieldFactor(0.8);
         fScintillationProcess->SetTrackSecondariesFirst(true);
-        fScintillationProcess->SetFiniteRiseTime(1.5*us);
+        //fScintillationProcess->SetFiniteRiseTime(1.5*us);
         //fScintillationProcess->SetScintillationByParticleType(true);
         //fScintillationProcess->SetScintillationExcitationRatio(1.0);
 
@@ -277,12 +273,13 @@ void OpNovicePhysicsList::ConstructOp() {
         fBoundaryProcess            ->SetVerboseLevel(fVerboseLevel);
 
         // Use Birks Correction in the Scintillation process
+        /*
         if(G4Threading::IsMasterThread()) {
             G4cout << "Birks was applied";
             G4EmSaturation* emSaturation =
             G4LossTableManager::Instance()->EmSaturation();
             fScintillationProcess->AddSaturation(emSaturation);
-        }
+        }*/
 
         auto particleIterator=GetParticleIterator();
         particleIterator->reset();
@@ -308,8 +305,8 @@ void OpNovicePhysicsList::ConstructOp() {
             }
             if (particleName == "opticalphoton") {
                 G4cout << " AddDiscreteProcess to OpticalPhoton " << G4endl;
-                //pmanager->AddDiscreteProcess(fAbsorptionProcess);
-                //pmanager->AddDiscreteProcess(fRayleighScatteringProcess);
+                pmanager->AddDiscreteProcess(fAbsorptionProcess);
+                pmanager->AddDiscreteProcess(fRayleighScatteringProcess);
                 //pmanager->AddDiscreteProcess(fMieHGScatteringProcess);
                 //pmanager->AddDiscreteProcess(fBoundaryProcess);
             }
@@ -319,7 +316,7 @@ void OpNovicePhysicsList::ConstructOp() {
     //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 void OpNovicePhysicsList::SetVerbose(G4int verbose) {
-        fVerboseLevel = 2;//verbose;
+        fVerboseLevel = 1;//verbose;
 
         fScintillationProcess->SetVerboseLevel(fVerboseLevel);
         fAbsorptionProcess->SetVerboseLevel(fVerboseLevel);
@@ -336,7 +333,8 @@ void OpNovicePhysicsList::SetCuts() {
         
         //SetCutsWithDefault();
 
-        if (verboseLevel>0) {}; //DumpCutValuesTable();
+        //if (verboseLevel>0) {}; 
+        DumpCutValuesTable();
 }
 
     //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

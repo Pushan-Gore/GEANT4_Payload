@@ -23,49 +23,21 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-// $Id: B1ActionInitialization.cc 68058 2013-03-13 14:47:43Z gcosmo $
+// $Id: LXeUserEventInformation.cc 68752 2013-04-05 10:23:47Z gcosmo $
 //
-/// \file B1ActionInitialization.cc
-/// \brief Implementation of the B1ActionInitialization class
-
-#include "B1ActionInitialization.hh"
-#include "B1PrimaryGeneratorAction.hh"
-#include "B1RunAction.hh"
-#include "B1EventAction.hh"
-#include "PayloadSteppingAction.hh"
+/// \file optical/LXe/src/LXeUserEventInformation.cc
+/// \brief Implementation of the LXeUserEventInformation class
+//
+//
+#include "LXeUserEventInformation.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-B1ActionInitialization::B1ActionInitialization()
- : G4VUserActionInitialization()
-{}
+LXeUserEventInformation::LXeUserEventInformation()
+  :fHitCount(0),fPhotonCount_Scint(0),fPhotonCount_Ceren(0),fAbsorptionCount(0),
+   fBoundaryAbsorptionCount(0),fTotE(0.),fEWeightPos(0.),fReconPos(0.),fConvPos(0.),
+   fConvPosSet(false),fPosMax(0.),fEdepMax(0.),fPMTsAboveThreshold(0) {}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-B1ActionInitialization::~B1ActionInitialization()
-{}
-
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-
-void B1ActionInitialization::BuildForMaster() const
-{
-  B1RunAction* runAction = new B1RunAction;
-  SetUserAction(runAction);
-}
-
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-
-void B1ActionInitialization::Build() const
-{
-  SetUserAction(new B1PrimaryGeneratorAction);
-
-  B1RunAction* runAction = new B1RunAction;
-  SetUserAction(runAction);
-  
-  B1EventAction* eventAction = new B1EventAction(runAction);
-  SetUserAction(eventAction);
-  
-  SetUserAction(new OpNoviceSteppingAction(eventAction));
-}  
-
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+LXeUserEventInformation::~LXeUserEventInformation() {}

@@ -23,49 +23,30 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-// $Id: B1ActionInitialization.cc 68058 2013-03-13 14:47:43Z gcosmo $
+// $Id: LXeUserTrackInformation.cc 68752 2013-04-05 10:23:47Z gcosmo $
 //
-/// \file B1ActionInitialization.cc
-/// \brief Implementation of the B1ActionInitialization class
-
-#include "B1ActionInitialization.hh"
-#include "B1PrimaryGeneratorAction.hh"
-#include "B1RunAction.hh"
-#include "B1EventAction.hh"
-#include "PayloadSteppingAction.hh"
+/// \file optical/LXe/src/LXeUserTrackInformation.cc
+/// \brief Implementation of the LXeUserTrackInformation class
+//
+//
+#include "LXeUserTrackInformation.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-B1ActionInitialization::B1ActionInitialization()
- : G4VUserActionInitialization()
-{}
+LXeUserTrackInformation::LXeUserTrackInformation()
+  : fStatus(active),fReflections(0),fForcedraw(false) {}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-B1ActionInitialization::~B1ActionInitialization()
-{}
+LXeUserTrackInformation::~LXeUserTrackInformation() {}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-void B1ActionInitialization::BuildForMaster() const
+void LXeUserTrackInformation::AddTrackStatusFlag(int s)
 {
-  B1RunAction* runAction = new B1RunAction;
-  SetUserAction(runAction);
+  if(s&active) //track is now active
+    fStatus&=~inactive; //remove any flags indicating it is inactive
+  else if(s&inactive) //track is now inactive
+    fStatus&=~active; //remove any flags indicating it is active
+  fStatus|=s; //add new flags
 }
-
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-
-void B1ActionInitialization::Build() const
-{
-  SetUserAction(new B1PrimaryGeneratorAction);
-
-  B1RunAction* runAction = new B1RunAction;
-  SetUserAction(runAction);
-  
-  B1EventAction* eventAction = new B1EventAction(runAction);
-  SetUserAction(eventAction);
-  
-  SetUserAction(new OpNoviceSteppingAction(eventAction));
-}  
-
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

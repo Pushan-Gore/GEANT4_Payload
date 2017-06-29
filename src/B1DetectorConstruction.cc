@@ -85,7 +85,7 @@ G4VPhysicalVolume* B1DetectorConstruction::Construct()
   //G4Material* world_mat = nist->FindOrBuildMaterial("G4_AIR");
 
   /* Added to test RINDEX of vacuum */
- 
+/*
   const G4int N_RINDEX_VAC = 2 ;                                             
   G4double X_RINDEX_VAC[N_RINDEX_VAC] = {h_Planck*c_light/lambda_max, h_Planck*c_light/lambda_min} ; 
   G4double RINDEX_VAC[N_RINDEX_VAC] = {1, 1};                       
@@ -95,7 +95,7 @@ G4VPhysicalVolume* B1DetectorConstruction::Construct()
   MPT_PMT->DumpTable();
                                                                                  
   world_mat->SetMaterialPropertiesTable(MPT_PMT);   
-
+*/
   /* Remove block till here */
 
 
@@ -127,7 +127,7 @@ G4VPhysicalVolume* B1DetectorConstruction::Construct()
   G4double Scnt_PP[NUMENTRIES] = { h_Planck*c_light/lambda_max, h_Planck*c_light/lambda_min};//6.6*eV, 7.4*eV };
       //6.6*eV, 6.7*eV, 6.8*eV, 6.9*eV,
      // 7.0*eV, 7.1*eV, 7.2*eV, 7.3*eV, 7.4*eV };
-  G4double Scnt_FAST[NUMENTRIES] = { 0.0, 1.0 };
+  G4double Scnt_FAST[NUMENTRIES] = { 0.000134, 0.241971 };
      // 0.000134, 0.004432,
      // 0.053991, 0.241971,
      // 0.398942, 0.000134,
@@ -146,11 +146,11 @@ G4VPhysicalVolume* B1DetectorConstruction::Construct()
   //,4.74*cm,4.74*cm,
    //   4.74*cm,4.74*cm,4.74*cm,4.74*cm,4.74*cm,};
   G4MaterialPropertiesTable* Scnt_MPT = new G4MaterialPropertiesTable();
-  //Scnt_MPT->AddProperty("FASTCOMPONENT", Scnt_PP, Scnt_FAST, NUMENTRIES);
-  //Scnt_MPT->AddProperty("SLOWCOMPONENT", Scnt_PP, Scnt_SLOW, NUMENTRIES);
-  Scnt_MPT->AddProperty("SCINTILLATION", Scnt_PP, Scnt_FAST, NUMENTRIES);
-  Scnt_MPT->AddProperty("ABSLENGTH", Scnt_PP, Scnt_absorption,NUMENTRIES)->SetSpline(true);
-  Scnt_MPT->AddProperty("RINDEX", Scnt_PP, Scnt_RINDEX, NUMENTRIES)->SetSpline(true);
+  Scnt_MPT->AddProperty("FASTCOMPONENT", Scnt_PP, Scnt_FAST, NUMENTRIES);
+  Scnt_MPT->AddProperty("SLOWCOMPONENT", Scnt_PP, Scnt_SLOW, NUMENTRIES);
+  //Scnt_MPT->AddProperty("SCINTILLATION", Scnt_PP, Scnt_FAST, NUMENTRIES);
+  Scnt_MPT->AddProperty("ABSLENGTH", Scnt_PP, Scnt_absorption,NUMENTRIES);//->SetSpline(true);
+  Scnt_MPT->AddProperty("RINDEX", Scnt_PP, Scnt_RINDEX, NUMENTRIES);//->SetSpline(true);
   Scnt_MPT->AddConstProperty("SCINTILLATIONYIELD", 54000./MeV);        // 5000./Mev
   Scnt_MPT->AddConstProperty("RESOLUTIONSCALE", 16.7);           // CSi = 16.7
   Scnt_MPT->AddConstProperty("FASTTIMECONSTANT", 600.*ns);
@@ -202,8 +202,8 @@ void B1DetectorConstruction::ConstructSDandField()
     G4String SDname;
 
     G4VSensitiveDetector* hodoscope = new B5HodoscopeSD(SDname="/pl_detector");
-    //if(hodoscope) 
-    //    G4cout << "Hodoscope not null";
+    if(hodoscope) 
+        G4cout << "Hodoscope(Sensitive detector) set to : " << hodoscope->GetName() << G4endl;
     sdManager->AddNewDetector(hodoscope);
     logicpl_detector->SetSensitiveDetector(hodoscope);
 }

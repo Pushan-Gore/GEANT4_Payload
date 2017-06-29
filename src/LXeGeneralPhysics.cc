@@ -23,49 +23,67 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-// $Id: B1ActionInitialization.cc 68058 2013-03-13 14:47:43Z gcosmo $
+// $Id: LXeGeneralPhysics.cc 100259 2016-10-17 08:02:30Z gcosmo $
 //
-/// \file B1ActionInitialization.cc
-/// \brief Implementation of the B1ActionInitialization class
+/// \file optical/LXe/src/LXeGeneralPhysics.cc
+/// \brief Implementation of the LXeGeneralPhysics class
+//
+//
+#include "LXeGeneralPhysics.hh"
 
-#include "B1ActionInitialization.hh"
-#include "B1PrimaryGeneratorAction.hh"
-#include "B1RunAction.hh"
-#include "B1EventAction.hh"
-#include "PayloadSteppingAction.hh"
+#include "globals.hh"
+#include "G4ios.hh"
+#include <iomanip>
+#include "G4Decay.hh"
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+
+LXeGeneralPhysics::LXeGeneralPhysics(const G4String& name)
+                     :  G4VPhysicsConstructor(name) {}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-B1ActionInitialization::B1ActionInitialization()
- : G4VUserActionInitialization()
-{}
-
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-
-B1ActionInitialization::~B1ActionInitialization()
-{}
-
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-
-void B1ActionInitialization::BuildForMaster() const
-{
-  B1RunAction* runAction = new B1RunAction;
-  SetUserAction(runAction);
+LXeGeneralPhysics::~LXeGeneralPhysics() {
+  //fDecayProcess = NULL;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-void B1ActionInitialization::Build() const
-{
-  SetUserAction(new B1PrimaryGeneratorAction);
+#include "G4ParticleDefinition.hh"
+#include "G4ProcessManager.hh"
 
-  B1RunAction* runAction = new B1RunAction;
-  SetUserAction(runAction);
-  
-  B1EventAction* eventAction = new B1EventAction(runAction);
-  SetUserAction(eventAction);
-  
-  SetUserAction(new OpNoviceSteppingAction(eventAction));
-}  
+#include "G4Geantino.hh"
+#include "G4ChargedGeantino.hh"
+
+#include "G4GenericIon.hh"
+
+#include "G4Proton.hh"
+
+void LXeGeneralPhysics::ConstructParticle()
+{
+  // pseudo-particles
+  G4Geantino::GeantinoDefinition();
+  G4ChargedGeantino::ChargedGeantinoDefinition();
+
+  G4GenericIon::GenericIonDefinition();
+}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+
+void LXeGeneralPhysics::ConstructProcess()
+{
+  G4Decay* fDecayProcess = new G4Decay();
+
+  // Add Decay Process
+  auto particleIterator=GetParticleIterator();
+  particleIterator->reset();
+  while( (*particleIterator)() ){
+    G4ParticleDefinition* particle = particleIterator->value();
+    G4ProcessManager* pmanager = particle->GetProcessManager();
+    if (fDecayProcess->IsApplicable(*particle)) {
+      pmanager ->AddProcess(fDecayProcess);
+      // set ordering for PostStepDoIt and AtRestDoIt
+      pmanager ->SetProcessOrdering(fDecayProcess, idxPostStep);
+      pmanager ->SetProcessOrdering(fDecayProcess, idxAtRest);
+    }
+  }
+}
