@@ -125,6 +125,9 @@ void B1RunAction::EndOfRunAction(const G4Run* run)
     G4double particleEnergy = particleGun->GetParticleEnergy();
     runCondition += G4BestUnit(particleEnergy,"Energy");
   }
+    
+    const G4ParticleGun* particleGun = generatorAction->GetParticleGun();
+    G4double particleEnergy = particleGun->GetParticleEnergy();
         
   // Print
   //  
@@ -143,8 +146,17 @@ void B1RunAction::EndOfRunAction(const G4Run* run)
      << G4endl
      << " The run consists of " << nofEvents << " "<< runCondition
      << G4endl
+     << " Mass of the Detector: " 
+     << G4BestUnit(mass,"Mass") 
+     << G4endl
      << " Cumulated dose per run, in scoring volume : " 
      << G4BestUnit(dose,"Dose") << " rms = " << G4BestUnit(rmsDose,"Dose")
+     << G4endl
+     << " Energy deposited in the detector : " 
+     << G4BestUnit(edep,"Energy") 
+     << G4endl
+     << " Cumulative energy of photons generated (approx) : " 
+     << G4BestUnit(particleEnergy - edep,"Energy") 
      << G4endl
      << "------------------------------------------------------------"
      << G4endl

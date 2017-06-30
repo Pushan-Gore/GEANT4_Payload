@@ -36,6 +36,7 @@
 #include "G4Track.hh"
 #include "G4OpticalPhoton.hh"
 #include "G4LogicalVolume.hh"
+#include "G4UnitsTable.hh"    
 
 #include "G4Event.hh"
 #include "G4RunManager.hh"
@@ -74,6 +75,7 @@ void OpNoviceSteppingAction::UserSteppingAction(const G4Step* step)
   G4String ParticleName = track->GetDynamicParticle()->
                                  GetParticleDefinition()->GetParticleName();
 
+  // Don't check Energy deposition and Secondaries geneated for Optical Photon
   if (ParticleName == "opticalphoton") return;
 
   const std::vector<const G4Track*>* secondaries =
@@ -92,6 +94,9 @@ void OpNoviceSteppingAction::UserSteppingAction(const G4Step* step)
         }
      }
   }
+
+  //G4cout << "Cerenkov at step: " << fCerenkovCounter << G4endl;
+  
   if (!fScoringVolume) {
     const B1DetectorConstruction* detectorConstruction
       = static_cast<const B1DetectorConstruction*>
@@ -110,6 +115,8 @@ void OpNoviceSteppingAction::UserSteppingAction(const G4Step* step)
   // collect energy deposited in this step
   G4double edepStep = step->GetTotalEnergyDeposit();
   fEventAction->AddEdep(edepStep);
+  
+  G4cout << "Scintillation count (at step) : " << fScintillationCounter << " ,and Energy deposited (at step) :  "<< G4BestUnit(edepStep,"Dose") <<G4endl;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

@@ -31,6 +31,7 @@
 #include "B1EventAction.hh"
 #include "B1RunAction.hh"
 #include "B5HodoscopeHit.hh"
+#include "PayloadSteppingAction.hh"
 
 #include "G4Event.hh"
 #include "G4RunManager.hh"
@@ -96,12 +97,14 @@ void B1EventAction::EndOfEventAction(const G4Event* event)
         << " " << primary->GetMomentum() << G4endl;
 
     // Hodoscope Plastic_SC
+    /*
     auto nhit  = hHC->entries();
     G4cout << "Hodoscope has " << nhit  << " hit(s)." << G4endl;
     for (auto i=0;i<nhit ;i++) {
       auto hit = (*hHC)[i];
       hit->Print();
     }
+    */
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
