@@ -92,7 +92,8 @@ int B5HodoscopeHit::operator==(const B5HodoscopeHit &/*right*/) const
 
 void B5HodoscopeHit::Draw()
 {
-  auto visManager = G4VVisManager::GetConcreteInstance();
+  /*
+    auto visManager = G4VVisManager::GetConcreteInstance();
   if (! visManager) return;
 
   G4Transform3D trans(fRot.inverse(),fPos);
@@ -103,6 +104,7 @@ void B5HodoscopeHit::Draw()
   //attribs.SetColour(colour);
   ///attribs.SetForceSolid(true);
   visManager->Draw(*fPLogV,attribs,trans);
+  */
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -158,7 +160,7 @@ std::vector<G4AttValue>* B5HodoscopeHit::CreateAttValues() const
 
 void B5HodoscopeHit::Print()
 {
-  G4cout << "  Hodoscope[" << fId << "] " << fTime/ns << " (nsec)" << G4endl;
+  G4cout << "  Hodoscope  " << fTime/ns << " (nsec)" << G4endl;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

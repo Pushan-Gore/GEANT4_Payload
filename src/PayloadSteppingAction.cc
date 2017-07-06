@@ -116,7 +116,7 @@ void OpNoviceSteppingAction::UserSteppingAction(const G4Step* step)
   G4double edepStep = step->GetTotalEnergyDeposit();
   fEventAction->AddEdep(edepStep);
   
-  G4cout << "Scintillation count (at step) : " << fScintillationCounter << " ,and Energy deposited (at step) :  "<< G4BestUnit(edepStep,"Dose") <<G4endl;
+  G4cout << "Scintillation count (at step) : " << fScintillationCounter << " ,and Energy deposited (at step) :  "<< G4BestUnit(edepStep,"Energy") <<G4endl;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

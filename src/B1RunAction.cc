@@ -31,6 +31,7 @@
 #include "B1RunAction.hh"
 #include "B1PrimaryGeneratorAction.hh"
 #include "B1DetectorConstruction.hh"
+#include "PayloadSteppingAction.hh"
 // #include "B1Run.hh"
 
 #include "G4RunManager.hh"
@@ -159,7 +160,6 @@ void B1RunAction::EndOfRunAction(const G4Run* run)
      << G4BestUnit(particleEnergy - edep,"Energy") 
      << G4endl
      << "------------------------------------------------------------"
-     << G4endl
      << G4endl;
 }
 

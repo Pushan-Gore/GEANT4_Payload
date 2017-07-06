@@ -115,7 +115,7 @@
 /vis/viewer/set/viewpointThetaPhi 120 150
 #
 # Re-establish auto refreshing and verbosity:
-/vis/viewer/set/autoRefresh true
+#/vis/viewer/set/autoRefresh true
 /vis/verbose warnings
 /process/list
 /cuts/verbose 1
