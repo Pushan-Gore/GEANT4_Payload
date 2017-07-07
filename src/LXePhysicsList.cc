@@ -57,15 +57,15 @@ LXePhysicsList::LXePhysicsList() : G4VModularPhysicsList()
   RegisterPhysics( new LXeMuonPhysics("muon"));
 
   // Optical Physics
-  G4OpticalPhysics* opticalPhysics = new G4OpticalPhysics();
+  G4OpticalPhysics* opticalPhysics = new G4OpticalPhysics(1, "Optical");
 
   //opticalPhysics->SetWLSTimeProfile("delta");
 
-  opticalPhysics->SetScintillationYieldFactor(1.0);
+  //opticalPhysics->SetScintillationYieldFactor(1.0);
   //opticalPhysics->SetScintillationExcitationRatio(1.5);
 
   //opticalPhysics->SetMaxNumPhotonsPerStep(100);
-  opticalPhysics->SetMaxBetaChangePerStep(10.0);
+  //opticalPhysics->SetMaxBetaChangePerStep(10.0);
 
   opticalPhysics->SetTrackSecondariesFirst(kCerenkov,true);
   opticalPhysics->SetTrackSecondariesFirst(kScintillation,true);

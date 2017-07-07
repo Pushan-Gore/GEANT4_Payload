@@ -43,6 +43,8 @@
 #include "G4eMultipleScattering.hh"
 #include "G4eIonisation.hh"
 #include "G4eBremsstrahlung.hh"
+#include "G4hMultipleScattering.hh"
+#include "G4ionIonisation.hh"
 #include "G4eplusAnnihilation.hh"
 
 class LXeEMPhysics : public G4VPhysicsConstructor

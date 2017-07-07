@@ -45,9 +45,15 @@
 #include "G4VSensitiveDetector.hh"
 #include "G4PhysicalConstants.hh" 
 
+//Goddess
+#include <GODDeSS_Messenger.hh>  
+#include <ScintillatorTileConstructor.hh>
+#include <FibreConstructor.hh>
+#include <PhotonDetectorConstructor.hh>
+
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-B1DetectorConstruction::B1DetectorConstruction()
+B1DetectorConstruction::B1DetectorConstruction(GODDeSS_Messenger *  )
 : G4VUserDetectorConstruction(),
   fScoringVolume(0)
 {
@@ -69,6 +75,21 @@ G4VPhysicalVolume* B1DetectorConstruction::Construct()
    
   // Option to switch on/off checking of volumes overlaps
   G4bool checkOverlaps = true;
+  
+  //Goddess Code
+  
+  //ScintillatorTileConstructor * STConstructor = goddessMessenger->GetScintillatorTileConstructor();
+  //FibreConstructor * FConstructor = goddessMessenger->GetFibreConstructor();
+  //PhotonDetectorConstructor * PDConstructor = goddessMessenger->GetPhotonDetectorConstructor();
+
+  //---------- scintillator tile ----------//
+  G4ThreeVector ScintiDimensions = G4ThreeVector(100. * mm, 10. * mm, 100. * mm);
+  
+  //STConstructor->SetScintillatorTransformation(G4Transform3D(G4RotationMatrix(), G4ThreeVector(0., 50. * mm, 0.)));
+  //STConstructor->SetScintillatorName("scintillator");
+  //STConstructor->ConstructASensitiveDetector();
+  //G4ScintillatorTile * scintillator = STConstructor->ConstructScintillator(ScintiDimensions, path/to/scintillator/property/file, pointer-to-physical-world-volume);
+  
 
   // World
   G4double world_sizeXY = 200*cm;
@@ -95,7 +116,7 @@ G4VPhysicalVolume* B1DetectorConstruction::Construct()
   MPT_PMT->DumpTable();
                                                                                  
   world_mat->SetMaterialPropertiesTable(MPT_PMT);   
-  */
+ */ 
   /* Remove block till here */
 
 
@@ -119,16 +140,15 @@ G4VPhysicalVolume* B1DetectorConstruction::Construct()
               checkOverlaps);                                           //overlaps checking
 
   // Plastic Detector
-  //G4Material* pl_detector_mat = nist->FindOrBuildMaterial("G4_PLASTIC_SC_VINYLTOLUENE");
-  G4Material* pl_detector_mat = nist->FindOrBuildMaterial("G4_CESIUM_IODIDE");
+  G4Material* pl_detector_mat = nist->FindOrBuildMaterial("G4_PLASTIC_SC_VINYLTOLUENE");
+  //G4Material* pl_detector_mat = nist->FindOrBuildMaterial("G4_CESIUM_IODIDE");
   G4ThreeVector pos = G4ThreeVector(0, 0, 0);
 
   const G4int NUMENTRIES = 2;
-  G4double Scnt_PP[NUMENTRIES] = {6.6*eV, 7.4*eV};
-  //{ h_Planck*c_light/lambda_max, h_Planck*c_light/lambda_min};//6.6*eV, 7.4*eV };
+  G4double Scnt_PP[NUMENTRIES] = { h_Planck*c_light/lambda_max, h_Planck*c_light/lambda_min};//6.6*eV, 7.4*eV };
       //6.6*eV, 6.7*eV, 6.8*eV, 6.9*eV,
      // 7.0*eV, 7.1*eV, 7.2*eV, 7.3*eV, 7.4*eV };
-  G4double Scnt_FAST[NUMENTRIES] = { 0.000134, 0.241971 };
+  G4double Scnt_FAST[NUMENTRIES] = { 0.017, 0.043 };
      // 0.000134, 0.004432,
      // 0.053991, 0.241971,
      // 0.398942, 0.000134,
@@ -140,27 +160,29 @@ G4VPhysicalVolume* B1DetectorConstruction::Construct()
       //0.008000, 0.005000,
       //0.020000, 0.001000,
       //0.000010 };
-  G4double Scnt_RINDEX[NUMENTRIES] = { 1.78, 1.78 };
+  G4double Scnt_RINDEX[NUMENTRIES] = { 1.58, 1.58 };
 //, 1.78, 1.78,
   //    1.78, 1.78, 1.78, 1.78, 1.78};
-  G4double Scnt_absorption[NUMENTRIES] = {4.74*cm,4.74*cm};
+  G4double Scnt_absorption[NUMENTRIES] = {1600.*mm,1600*mm};
   //,4.74*cm,4.74*cm,
    //   4.74*cm,4.74*cm,4.74*cm,4.74*cm,4.74*cm,};
   G4MaterialPropertiesTable* Scnt_MPT = new G4MaterialPropertiesTable();
   Scnt_MPT->AddProperty("FASTCOMPONENT", Scnt_PP, Scnt_FAST, NUMENTRIES);
   //Scnt_MPT->AddProperty("SLOWCOMPONENT", Scnt_PP, Scnt_SLOW, NUMENTRIES);
   //Scnt_MPT->AddProperty("SCINTILLATION", Scnt_PP, Scnt_FAST, NUMENTRIES);
-  //Scnt_MPT->AddProperty("ABSLENGTH", Scnt_PP, Scnt_absorption,NUMENTRIES);//->SetSpline(true);
+  Scnt_MPT->AddProperty("ABSLENGTH", Scnt_PP, Scnt_absorption,NUMENTRIES);//->SetSpline(true);
   Scnt_MPT->AddProperty("RINDEX", Scnt_PP, Scnt_RINDEX, NUMENTRIES);//->SetSpline(true);
-  Scnt_MPT->AddConstProperty("SCINTILLATIONYIELD", 54000./MeV);        // 5000./Mev
-  Scnt_MPT->AddConstProperty("RESOLUTIONSCALE", 16.7);           // CSi = 16.7
-  Scnt_MPT->AddConstProperty("FASTTIMECONSTANT", 600.*ns);
-  Scnt_MPT->AddConstProperty("SLOWTIMECONSTANT", 1000.*ns);
-  Scnt_MPT->AddConstProperty("YIELDRATIO", 0.8);
+  Scnt_MPT->AddConstProperty("SCINTILLATIONYIELD", 13600./MeV);        // 5000./Mev
+  Scnt_MPT->AddConstProperty("RESOLUTIONSCALE", 1.);           // CSi = 16.7
+  Scnt_MPT->AddConstProperty("FASTTIMECONSTANT", 1.8*ns);
+  //Scnt_MPT->AddConstProperty("SLOWTIMECONSTANT", 3500.*ns);
+  Scnt_MPT->AddConstProperty("FASTSCINTILLATIONRISETIME", 0.7*ns);
+  //Scnt_MPT->AddConstProperty("SLOWSCINTILLATIONRISETIME", 1000.*ns);
+  //Scnt_MPT->AddConstProperty("YIELDRATIO", 1.);
 
   Scnt_MPT->DumpTable();
   pl_detector_mat->SetMaterialPropertiesTable(Scnt_MPT);
-  pl_detector_mat->GetIonisation()->SetBirksConstant(0.025498*mm/MeV);
+  pl_detector_mat->GetIonisation()->SetBirksConstant(0.111*mm/MeV);
 
   // Box Shape shape       
   G4double pl_detector_dx = 5*cm;

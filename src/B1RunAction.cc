@@ -75,7 +75,10 @@ B1RunAction::~B1RunAction()
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 void B1RunAction::BeginOfRunAction(const G4Run*)
-{ 
+{
+  //Goddess 
+  //goddessMessenger->GetPhotonDetectorConstructor()->WriteRunIDToHitFile(aRun->GetRunID());
+
   // inform the runManager to save random number seed
   G4RunManager::GetRunManager()->SetRandomNumberStore(false);
 

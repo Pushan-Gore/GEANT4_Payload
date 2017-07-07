@@ -33,6 +33,9 @@
 #include "B5HodoscopeHit.hh"
 #include "PayloadSteppingAction.hh"
 
+//Goddess include file
+//#include "EventAction.hh"
+
 #include "G4Event.hh"
 #include "G4RunManager.hh"
 #include "G4EventManager.hh"
@@ -60,7 +63,11 @@ B1EventAction::~B1EventAction()
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 void B1EventAction::BeginOfEventAction(const G4Event*)
-{    
+{   
+    // Goddess
+    //GoddessDataStorage->GetPhotonDetectorConstructor()->WriteEventIDToHitFile(theEvent->GetEventID());
+    //GoddessDataStorage->clean();
+
     fEdep = 0.;
     if (fHodHCID==-1) {                                              
         auto sdManager = G4SDManager::GetSDMpointer();                  
@@ -71,7 +78,10 @@ void B1EventAction::BeginOfEventAction(const G4Event*)
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 void B1EventAction::EndOfEventAction(const G4Event* event)
-{   
+{  
+    //Goddess
+    //G4double scintillatorHitTime = GoddessDataStorage->GetScintillatorHitTime(iter);
+
     // accumulate statistics in run action
     fRunAction->AddEdep(fEdep);
     auto hce = event->GetHCofThisEvent();

@@ -25,7 +25,7 @@
 # Disable auto refresh and quieten vis messages whilst scene and
 # trajectories are established:
 /vis/viewer/set/autoRefresh false
-/vis/verbose errors
+/vis/verbose quiet
 #
 # Draw geometry:
 /vis/drawVolume
@@ -116,7 +116,7 @@
 #
 # Re-establish auto refreshing and verbosity:
 #/vis/viewer/set/autoRefresh true
-/vis/verbose warnings
+#/vis/verbose warnings
 /process/list
 /cuts/verbose 1
 /hits/verbose 1

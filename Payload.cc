@@ -48,8 +48,15 @@
 
 #include "G4VisExecutive.hh"
 #include "G4UIExecutive.hh"
+#include "G4SystemOfUnits.hh" 
 
 #include "Randomize.hh"
+
+// Goddess include files
+#include <GODDeSS_Messenger.hh>
+#include <ScintillatorTileConstructor.hh>
+#include <FibreConstructor.hh>
+#include <PhotonDetectorConstructor.hh>
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -70,17 +77,46 @@ int main(int argc,char** argv)
 #else
   G4RunManager* runManager = new G4RunManager;
 #endif
+  
+  //Goddess messenger initialisation:
+  //GODDeSS: energy range for the property distributions
+  vector<G4double> energyRangeVector;
+  G4double energyRangeVectorSize = 10;
+  G4double energiesMin = 2.2*eV;
+  G4double energiesMax = 7.2*eV;
+  for(int i = 0; i < energyRangeVectorSize; i++) 
+    energyRangeVector.push_back( energiesMin + i * (energiesMax - energiesMin) / (energyRangeVectorSize - 1) );
+
+  //GODDeSS Messenger:
+  GODDeSS_Messenger * goddessMessenger = new GODDeSS_Messenger(energyRangeVector);
+
+
 
   // Set mandatory initialization classes
   // 1. Detector construction
-  runManager->SetUserInitialization(new B1DetectorConstruction());
+  B1DetectorConstruction* DetectorConstruction = new B1DetectorConstruction(goddessMessenger); // added goddess messenger
+  runManager->SetUserInitialization(DetectorConstruction);
 
   // 2. Physics list
-  //G4VModularPhysicsList* physicsList = new FTFP_BERT_EMY;// Changed from QBBC
+  
+  LXePhysicsList* physicsList = new LXePhysicsList(); // If this doesn't work add G4VModularPhysicsList
+  
+  // Goddess Physiocs list modification
+  //ScintillatorTileConstructor * scintillatorTileConstructor = new ScintillatorTileConstructor(physicsList, goddessMessenger->GetPropertyToolsManager(), goddessMessenger->GetDataStorage(), SearchOverlaps);
+  //goddessMessenger->SetScintillatorTileConstructor(scintillatorTileConstructor);
+
+  //FibreConstructor * fibreConstructor = new FibreConstructor(physicsList, goddessMessenger->GetPropertyToolsManager(), goddessMessenger->GetDataStorage(), SearchOverlaps);
+  //goddessMessenger->SetFibreConstructor(fibreConstructor);
+
+  //G4String hitFile = path/to/file/which/the/hitting/photons/should/be/saved/in;
+  //goddessMessenger->GetDataStorage()->SetPhotonDetectorHitFile(hitFile);
+  //PhotonDetectorConstructor * photonDetectorConstructor = new PhotonDetectorConstructor(physicsList, goddessMessenger->GetPropertyToolsManager(), goddessMessenger->GetDataStorage(), SearchOverlaps);
+  //goddessMessenger->SetPhotonDetectorConstructor(photonDetectorConstructor);
+  
   //physicsList->SetVerboseLevel(1);
   //runManager->SetUserInitialization(physicsList);
   //runManager->SetUserInitialization(new OpNovicePhysicsList());
-  runManager->SetUserInitialization(new LXePhysicsList());
+  runManager->SetUserInitialization(physicsList);
   //runManager->SetUserInitialization(new PhysicsList());
 
 
@@ -88,7 +124,7 @@ int main(int argc,char** argv)
   runManager->SetUserInitialization(new B1ActionInitialization());
   
   // Initialize visualization
-  G4VisManager* visManager = new G4VisExecutive;
+  G4VisManager* visManager = new G4VisExecutive("quite");
   visManager->Initialize();
 
   // Get the pointer to the User Interface manager
@@ -108,7 +144,13 @@ int main(int argc,char** argv)
     ui->SessionStart();
     delete ui;
   }
-  
+
+  //GODDeSS
+  //delete goddessMessenger;
+  //delete scintillatorTileConstructor;
+  //delete fibreConstructor;
+  //delete photonDetectorConstructor;
+
   delete visManager;
   delete runManager;
 }

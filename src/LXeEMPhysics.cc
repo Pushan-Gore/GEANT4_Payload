@@ -54,6 +54,7 @@ LXeEMPhysics::~LXeEMPhysics() {}
 
 #include "G4Electron.hh"
 #include "G4Positron.hh"
+#include "G4Proton.hh"
 
 #include "G4NeutrinoE.hh"
 #include "G4AntiNeutrinoE.hh"
@@ -66,6 +67,7 @@ void LXeEMPhysics::ConstructParticle()
   // electron
   G4Electron::ElectronDefinition();
   G4Positron::PositronDefinition();
+  G4Proton::ProtonDefinition();
   G4NeutrinoE::NeutrinoEDefinition();
   G4AntiNeutrinoE::AntiNeutrinoEDefinition();
 }
@@ -101,6 +103,12 @@ void LXeEMPhysics::ConstructProcess()
   G4eplusAnnihilation* fAnnihilation =
     new G4eplusAnnihilation();
 
+    //Proton physics
+  G4hMultipleScattering* fProtonMultipleScattering =
+    new G4hMultipleScattering();
+  G4ionIonisation* fProtonIonisation =
+    new G4ionIonisation();
+  
   G4ProcessManager* pManager = 0;
 
   // Gamma Physics
@@ -124,4 +132,9 @@ void LXeEMPhysics::ConstructProcess()
   pManager->AddProcess(fPositronBremsStrahlung,     -1, 3, 3);  
   pManager->AddProcess(fAnnihilation,                0,-1, 4);  
 
+  //Proton Physics
+  pManager = G4Proton::Proton()->GetProcessManager();
+ 
+  pManager->AddProcess(fProtonMultipleScattering, -1, 1, 1);
+  pManager->AddProcess(fProtonIonisation,         -1, 2, 2);
 }
