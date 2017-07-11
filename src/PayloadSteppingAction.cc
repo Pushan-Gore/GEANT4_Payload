@@ -61,9 +61,6 @@ OpNoviceSteppingAction::~OpNoviceSteppingAction()
 
 void OpNoviceSteppingAction::UserSteppingAction(const G4Step* step)
 {
-  //Goddess
-  ///goddessMessenger->GetDataStorage()->SavePreviousStepOpticalPhotonData(theStep);
-  
   G4int eventNumber = G4RunManager::GetRunManager()->
                                               GetCurrentEvent()->GetEventID();
 

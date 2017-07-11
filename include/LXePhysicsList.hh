@@ -33,7 +33,10 @@
 #define LXePhysicsList_h 1
 
 #include "G4VModularPhysicsList.hh"
+#include "G4ProcessManager.hh"
 #include "globals.hh"
+
+class G4ProcessManager;
 
 class LXePhysicsList: public G4VModularPhysicsList
 {
@@ -46,6 +49,8 @@ class LXePhysicsList: public G4VModularPhysicsList
 
     // SetCuts()
     virtual void SetCuts();
+    // Remove this if it doesn't work
+    void AddParameterization();
 
 };
 

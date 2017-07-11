@@ -80,6 +80,7 @@ void LXeGeneralPhysics::ConstructProcess()
     G4ParticleDefinition* particle = particleIterator->value();
     G4ProcessManager* pmanager = particle->GetProcessManager();
     if (fDecayProcess->IsApplicable(*particle)) {
+      G4cout << "Decay added to : " << particle->GetParticleName() << G4endl;
       pmanager ->AddProcess(fDecayProcess);
       // set ordering for PostStepDoIt and AtRestDoIt
       pmanager ->SetProcessOrdering(fDecayProcess, idxPostStep);

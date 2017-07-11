@@ -1,0 +1,33 @@
+/vis/filtering/trajectories/create/particleFilter
+/vis/filtering/trajectories/particleFilter-0/add e-
+
+/vis/viewer/set/viewpointVector -1 0 0 
+/vis/viewer/zoom 21
+#/vis/ogl/set/exportFormat jpg
+
+/gun/particle e-
+
+/gun/energy 400 keV
+/run/beamOn
+/vis/ogl/export Ogl_output/400_to_450_400keV_800um
+
+/gun/energy 410 keV
+/run/beamOn
+/vis/ogl/export Ogl_output/400_to_450_410keV_800um
+
+/gun/energy 420 keV
+/run/beamOn
+/vis/ogl/export Ogl_output/400_to_450_420keV_800um
+
+/gun/energy 430 keV
+/run/beamOn
+/vis/ogl/export Ogl_output/400_to_450_430keV_800um
+
+/gun/energy 440 keV
+/run/beamOn
+/vis/ogl/export Ogl_output/400_to_450_440keV_800um
+
+/gun/energy 450 keV
+/run/beamOn
+/vis/ogl/export Ogl_output/400_to_450_450keV_800um
+

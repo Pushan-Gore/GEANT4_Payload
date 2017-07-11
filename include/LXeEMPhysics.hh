@@ -45,7 +45,12 @@
 #include "G4eBremsstrahlung.hh"
 #include "G4hMultipleScattering.hh"
 #include "G4ionIonisation.hh"
+#include "G4hIonisation.hh"
+#include "G4hBremsstrahlung.hh"
 #include "G4eplusAnnihilation.hh"
+#include "G4HadronElasticProcess.hh"
+#include "G4ProtonInelasticProcess.hh"
+#include "G4AlphaInelasticProcess.hh"
 
 class LXeEMPhysics : public G4VPhysicsConstructor
 {

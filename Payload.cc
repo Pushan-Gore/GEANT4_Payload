@@ -23,10 +23,10 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-// $Id: exampleB1.cc 86065 2014-11-07 08:51:15Z gcosmo $
+// $Id: Payload.cc 86065 2014-11-07 08:51:15Z gcosmo $
 //
-/// \file exampleB1.cc
-/// \brief Main program of the B1 example
+/// \file Payload.cc
+/// \brief Main program of the Payload 
 
 #include "B1DetectorConstruction.hh"
 
@@ -52,12 +52,6 @@
 
 #include "Randomize.hh"
 
-// Goddess include files
-#include <GODDeSS_Messenger.hh>
-#include <ScintillatorTileConstructor.hh>
-#include <FibreConstructor.hh>
-#include <PhotonDetectorConstructor.hh>
-
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 int main(int argc,char** argv)
@@ -78,46 +72,16 @@ int main(int argc,char** argv)
   G4RunManager* runManager = new G4RunManager;
 #endif
   
-  //Goddess messenger initialisation:
-  //GODDeSS: energy range for the property distributions
-  vector<G4double> energyRangeVector;
-  G4double energyRangeVectorSize = 10;
-  G4double energiesMin = 2.2*eV;
-  G4double energiesMax = 7.2*eV;
-  for(int i = 0; i < energyRangeVectorSize; i++) 
-    energyRangeVector.push_back( energiesMin + i * (energiesMax - energiesMin) / (energyRangeVectorSize - 1) );
-
-  //GODDeSS Messenger:
-  GODDeSS_Messenger * goddessMessenger = new GODDeSS_Messenger(energyRangeVector);
-
-
 
   // Set mandatory initialization classes
   // 1. Detector construction
-  B1DetectorConstruction* DetectorConstruction = new B1DetectorConstruction(goddessMessenger); // added goddess messenger
+  B1DetectorConstruction* DetectorConstruction = new B1DetectorConstruction(); 
   runManager->SetUserInitialization(DetectorConstruction);
 
   // 2. Physics list
-  
   LXePhysicsList* physicsList = new LXePhysicsList(); // If this doesn't work add G4VModularPhysicsList
-  
-  // Goddess Physiocs list modification
-  //ScintillatorTileConstructor * scintillatorTileConstructor = new ScintillatorTileConstructor(physicsList, goddessMessenger->GetPropertyToolsManager(), goddessMessenger->GetDataStorage(), SearchOverlaps);
-  //goddessMessenger->SetScintillatorTileConstructor(scintillatorTileConstructor);
-
-  //FibreConstructor * fibreConstructor = new FibreConstructor(physicsList, goddessMessenger->GetPropertyToolsManager(), goddessMessenger->GetDataStorage(), SearchOverlaps);
-  //goddessMessenger->SetFibreConstructor(fibreConstructor);
-
-  //G4String hitFile = path/to/file/which/the/hitting/photons/should/be/saved/in;
-  //goddessMessenger->GetDataStorage()->SetPhotonDetectorHitFile(hitFile);
-  //PhotonDetectorConstructor * photonDetectorConstructor = new PhotonDetectorConstructor(physicsList, goddessMessenger->GetPropertyToolsManager(), goddessMessenger->GetDataStorage(), SearchOverlaps);
-  //goddessMessenger->SetPhotonDetectorConstructor(photonDetectorConstructor);
-  
   //physicsList->SetVerboseLevel(1);
-  //runManager->SetUserInitialization(physicsList);
-  //runManager->SetUserInitialization(new OpNovicePhysicsList());
   runManager->SetUserInitialization(physicsList);
-  //runManager->SetUserInitialization(new PhysicsList());
 
 
   // 3. User action initialization
@@ -144,12 +108,6 @@ int main(int argc,char** argv)
     ui->SessionStart();
     delete ui;
   }
-
-  //GODDeSS
-  //delete goddessMessenger;
-  //delete scintillatorTileConstructor;
-  //delete fibreConstructor;
-  //delete photonDetectorConstructor;
 
   delete visManager;
   delete runManager;

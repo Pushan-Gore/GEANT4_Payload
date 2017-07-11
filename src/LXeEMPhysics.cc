@@ -55,6 +55,7 @@ LXeEMPhysics::~LXeEMPhysics() {}
 #include "G4Electron.hh"
 #include "G4Positron.hh"
 #include "G4Proton.hh"
+#include "G4GenericIon.hh"
 
 #include "G4NeutrinoE.hh"
 #include "G4AntiNeutrinoE.hh"
@@ -68,6 +69,7 @@ void LXeEMPhysics::ConstructParticle()
   G4Electron::ElectronDefinition();
   G4Positron::PositronDefinition();
   G4Proton::ProtonDefinition();
+  //G4GenericIon::GenericIonDefinition();
   G4NeutrinoE::NeutrinoEDefinition();
   G4AntiNeutrinoE::AntiNeutrinoEDefinition();
 }
@@ -88,6 +90,7 @@ void LXeEMPhysics::ConstructProcess()
     // Electron physics
   G4eMultipleScattering* fElectronMultipleScattering =
     new G4eMultipleScattering();
+  // This was added, remove this to get eIonisation
   G4eIonisation* fElectronIonisation =
     new G4eIonisation();
   G4eBremsstrahlung* fElectronBremsStrahlung =
@@ -106,8 +109,14 @@ void LXeEMPhysics::ConstructProcess()
     //Proton physics
   G4hMultipleScattering* fProtonMultipleScattering =
     new G4hMultipleScattering();
-  G4ionIonisation* fProtonIonisation =
-    new G4ionIonisation();
+  G4hIonisation* fProtonIonisation =
+    new G4hIonisation();
+    
+  //Alpha physics
+  G4hMultipleScattering* fAlphaMultipleScattering =
+    new G4hMultipleScattering();
+  G4hIonisation* fAlphaIonisation =
+    new G4hIonisation();
   
   G4ProcessManager* pManager = 0;
 
@@ -137,4 +146,17 @@ void LXeEMPhysics::ConstructProcess()
  
   pManager->AddProcess(fProtonMultipleScattering, -1, 1, 1);
   pManager->AddProcess(fProtonIonisation,         -1, 2, 2);
+  pManager->AddDiscreteProcess(new G4HadronElasticProcess());
+  pManager->AddDiscreteProcess(new G4ProtonInelasticProcess());
+
+  //Alpha Physics
+  //msc, ionIonisation, Scint, AlphaInelastic, HadronElastic
+  pManager = G4Alpha::Alpha()->GetProcessManager();
+
+  pManager->AddProcess(fAlphaMultipleScattering, -1, 1 ,1);                         
+  pManager->AddProcess(fAlphaIonisation, -1, 2, 2);              
+  pManager->AddDiscreteProcess(new G4HadronElasticProcess());
+  pManager->AddDiscreteProcess(new G4AlphaInelasticProcess());
+
+
 }

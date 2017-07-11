@@ -33,7 +33,6 @@
 
 #include "G4VUserDetectorConstruction.hh"
 #include "globals.hh"
-#include <GODDeSS_Messenger.hh>  
 
 class G4VPhysicalVolume;
 class G4VSensitiveDetector;
@@ -44,7 +43,7 @@ class G4LogicalVolume;
 class B1DetectorConstruction : public G4VUserDetectorConstruction
 {
   public:
-    B1DetectorConstruction(GODDeSS_Messenger *);
+    B1DetectorConstruction();
     virtual ~B1DetectorConstruction();
 
     virtual G4VPhysicalVolume* Construct();
@@ -57,6 +56,7 @@ class B1DetectorConstruction : public G4VUserDetectorConstruction
 
   private:
     G4LogicalVolume* logicpl_detector;
+    G4LogicalVolume* logiccsi_crystal;
     G4double lambda_min ;                                                         
     G4double lambda_max ;
 };

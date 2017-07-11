@@ -37,6 +37,7 @@
 
 #include "G4OpticalPhysics.hh"
 #include "G4OpticalProcessIndex.hh"
+#include "G4FastSimulationManagerProcess.hh"
 
 #include "G4SystemOfUnits.hh"
 
@@ -57,7 +58,7 @@ LXePhysicsList::LXePhysicsList() : G4VModularPhysicsList()
   RegisterPhysics( new LXeMuonPhysics("muon"));
 
   // Optical Physics
-  G4OpticalPhysics* opticalPhysics = new G4OpticalPhysics(1, "Optical");
+  G4OpticalPhysics* opticalPhysics = new G4OpticalPhysics(0, "Optical");
 
   //opticalPhysics->SetWLSTimeProfile("delta");
 
@@ -85,3 +86,17 @@ void LXePhysicsList::SetCuts(){
   SetCutsWithDefault();
   DumpCutValuesTable();
 }
+
+void LXePhysicsList::AddParameterization() {                                    
+    G4FastSimulationManagerProcess* fastSimulationManagerProcess =                
+        new G4FastSimulationManagerProcess();                                       
+    auto theParticleIterator=GetParticleIterator();
+    theParticleIterator->reset();                                                 
+    while((*theParticleIterator)()) {                                             
+        G4ParticleDefinition* particle = theParticleIterator->value();              
+        G4ProcessManager* pmanager = particle->GetProcessManager();                 
+        if (particle->GetParticleName() == "opticalphoton") {                       
+        pmanager->AddProcess(fastSimulationManagerProcess, -1, -1, 1);            
+        }                                                                           
+    }                                                                             
+}         
