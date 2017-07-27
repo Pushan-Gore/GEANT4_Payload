@@ -32,6 +32,8 @@
 #include "B1PrimaryGeneratorAction.hh"
 #include "B1DetectorConstruction.hh"
 #include "PayloadSteppingAction.hh"
+#include "persistency/PersistencyHandler.hh"
+#include "persistency/PersistVisitorFactory.hh"
 // #include "B1Run.hh"
 
 #include "G4RunManager.hh"
@@ -47,7 +49,8 @@
 B1RunAction::B1RunAction()
 : G4UserRunAction(),
   fEdep(0.),
-  fEdep2(0.)
+  fEdep2(0.),
+  stopped_count(0.)
 { 
   // add new units for dose
   // 
@@ -60,6 +63,10 @@ B1RunAction::B1RunAction()
   new G4UnitDefinition("microgray", "microGy" , "Dose", microgray);
   new G4UnitDefinition("nanogray" , "nanoGy"  , "Dose", nanogray);
   new G4UnitDefinition("picogray" , "picoGy"  , "Dose", picogray); 
+
+  /* Persistency for g4sipm */
+  persistencyHandler = new PersistencyHandler(PersistVisitorFactory::getInstance()->create("persistency"));
+
 
   // Register accumulable to the accumulable manager
   G4AccumulableManager* accumulableManager = G4AccumulableManager::Instance();
@@ -85,6 +92,7 @@ void B1RunAction::BeginOfRunAction(const G4Run*)
   // reset accumulables to their initial values
   G4AccumulableManager* accumulableManager = G4AccumulableManager::Instance();
   accumulableManager->Reset();
+  stopped_count = 0;
 
 }
 
@@ -162,6 +170,9 @@ void B1RunAction::EndOfRunAction(const G4Run* run)
      << " Cumulative energy of photons generated (approx) : " 
      << G4BestUnit(particleEnergy - edep,"Energy") 
      << G4endl
+     << "Total particles stopped : "
+     << stopped_count
+     << G4endl
      << "------------------------------------------------------------"
      << G4endl;
 }
@@ -170,10 +181,21 @@ void B1RunAction::EndOfRunAction(const G4Run* run)
 
 void B1RunAction::AddEdep(G4double edep)
 {
+  const B1PrimaryGeneratorAction* generatorAction                               
+    = static_cast<const B1PrimaryGeneratorAction*>
+    (G4RunManager::GetRunManager()->GetUserPrimaryGeneratorAction());
+  const G4ParticleGun* particleGun = generatorAction->GetParticleGun();
+  G4double particleEnergy = particleGun->GetParticleEnergy();
+
   fEdep  += edep;
   fEdep2 += edep*edep;
+  if (edep == particleEnergy)
+      stopped_count++;
 }
 
+PersistencyHandler* B1RunAction::getPersistencyHandler() const {                  
+    return persistencyHandler;
+}   
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 

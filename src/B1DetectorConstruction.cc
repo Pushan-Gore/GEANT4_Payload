@@ -47,20 +47,34 @@
 #include "G4Colour.hh"
 #include "G4VisAttributes.hh"
 
+#include "G4Sipm.hh"
+#include "MaterialFactory.hh"                                                   
+#include "model/G4SipmModelFactory.hh"                                          
+#include "housing/G4SipmHousing.hh"                                             
+#include "housing/impl/HamamatsuCeramicHousing.hh"                              
+#include "housing/impl/HamamatsuSmdHousing.hh"
+
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 B1DetectorConstruction::B1DetectorConstruction()
     : G4VUserDetectorConstruction(),
     fScoringVolume(0)
 {
+    // Create SiPM and housing 
+    // NOTE: The model used is generic model, refer to other models to fit the situation
+    G4SipmModel* model = G4SipmModelFactory::getInstance()->createGenericSipmModel();
+    // NOTE: Default housing model is used, the other options are smd and ceramic
+    housing = new G4SipmHousing(new G4Sipm(model));
+
     lambda_min = 200*nm ;
     lambda_max = 700*nm ;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-B1DetectorConstruction::~B1DetectorConstruction()
-{ }
+B1DetectorConstruction::~B1DetectorConstruction() { 
+    delete housing;
+}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -68,7 +82,7 @@ G4VPhysicalVolume* B1DetectorConstruction::Construct()
 {  
     // Get nist material manager
     G4NistManager* nist = G4NistManager::Instance();
-
+    
     // Option to switch on/off checking of volumes overlaps
     G4bool checkOverlaps = true;
 
@@ -118,7 +132,13 @@ G4VPhysicalVolume* B1DetectorConstruction::Construct()
                 0,                                                        //copy number
                 checkOverlaps);                                           //overlaps checking
 
-    
+    // Build SiPM
+    //housing->setPackageDx(5*cm);
+    //housing->setPackageDy(5*cm);
+    //housing->setPackageDz();
+    housing->setPosition(G4ThreeVector(0., 0., ((-housing->getDz() / 2.)+ 5)*cm));
+    housing->buildAndPlace(physWorld);
+
     // Plastic Detector
     G4Material* pl_detector_mat = nist->FindOrBuildMaterial("G4_PLASTIC_SC_VINYLTOLUENE");
     G4ThreeVector pos_pl = G4ThreeVector(0, 0, 0);
@@ -258,6 +278,14 @@ void B1DetectorConstruction::ConstructSDandField()
         G4cout << "Hodoscope(Sensitive detector) set to : " << hodoscope->GetName() << G4endl;
     sdManager->AddNewDetector(hodoscope);
     logicpl_detector->SetSensitiveDetector(hodoscope);
+}
+
+G4SipmModel* B1DetectorConstruction::getSipmModel() const {
+    return housing->getSipm()->getModel();
+}
+
+G4SipmHousing* B1DetectorConstruction::getSipmHousing() const {
+    return housing;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

@@ -76,6 +76,8 @@ int main(int argc,char** argv)
   // Set mandatory initialization classes
   // 1. Detector construction
   B1DetectorConstruction* DetectorConstruction = new B1DetectorConstruction(); 
+  DetectorConstruction->getSipmModel()->setTemperature(273 * kelvin + CLHEP::STP_Temperature);
+  DetectorConstruction->getSipmModel()->setBiasVoltage(1 * volt);
   runManager->SetUserInitialization(DetectorConstruction);
 
   // 2. Physics list

@@ -34,6 +34,9 @@
 #include "G4VUserDetectorConstruction.hh"
 #include "globals.hh"
 
+#include "G4Sipm.hh"                                                       
+#include "housing/G4SipmHousing.hh"
+
 class G4VPhysicalVolume;
 class G4VSensitiveDetector;
 class G4LogicalVolume;
@@ -48,7 +51,9 @@ class B1DetectorConstruction : public G4VUserDetectorConstruction
 
     virtual G4VPhysicalVolume* Construct();
     virtual void ConstructSDandField();
-    
+    G4SipmModel* getSipmModel() const;
+    G4SipmHousing* getSipmHousing() const;
+
     G4LogicalVolume* GetScoringVolume() const { return fScoringVolume; }
 
   protected:
@@ -57,6 +62,9 @@ class B1DetectorConstruction : public G4VUserDetectorConstruction
   private:
     G4LogicalVolume* logicpl_detector;
     G4LogicalVolume* logiccsi_crystal;
+
+    // Sipm housing 
+    G4SipmHousing* housing;
     G4double lambda_min ;                                                         
     G4double lambda_max ;
 };

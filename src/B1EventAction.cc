@@ -40,9 +40,14 @@
 #include "G4RunManager.hh"
 #include "G4EventManager.hh"
 #include "G4HCofThisEvent.hh"
+#include "G4DCofThisEvent.hh"
 #include "G4VHitsCollection.hh"
 #include "G4SDManager.hh"
 #include "G4SystemOfUnits.hh"
+//#include <G4RunManager.hh>                                                      
+#include "G4DigiManager.hh"
+
+#include "persistency/PersistencyHandler.hh" 
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -64,10 +69,6 @@ B1EventAction::~B1EventAction()
 
 void B1EventAction::BeginOfEventAction(const G4Event*)
 {   
-    // Goddess
-    //GoddessDataStorage->GetPhotonDetectorConstructor()->WriteEventIDToHitFile(theEvent->GetEventID());
-    //GoddessDataStorage->clean();
-
     fEdep = 0.;
     if (fHodHCID==-1) {                                              
         auto sdManager = G4SDManager::GetSDMpointer();                  
@@ -79,9 +80,6 @@ void B1EventAction::BeginOfEventAction(const G4Event*)
 
 void B1EventAction::EndOfEventAction(const G4Event* event)
 {  
-    //Goddess
-    //G4double scintillatorHitTime = GoddessDataStorage->GetScintillatorHitTime(iter);
-
     // accumulate statistics in run action
     fRunAction->AddEdep(fEdep);
     auto hce = event->GetHCofThisEvent();
@@ -105,7 +103,8 @@ void B1EventAction::EndOfEventAction(const G4Event* event)
         << ">>> Event " << event->GetEventID() << " >>> Simulation truth : "
         << primary->GetG4code()->GetParticleName()
         << " " << primary->GetMomentum() << G4endl;
-
+    
+    /*
     // Hodoscope Plastic_SC
     auto nhit  = hHC->entries();
     G4cout << "Hodoscope has " << nhit  << " hit(s)." << G4endl;
@@ -113,6 +112,51 @@ void B1EventAction::EndOfEventAction(const G4Event* event)
       auto hit = (*hHC)[i];
       hit->Print();
     }
+    */
+    
+    PersistencyHandler* persistency =
+        ((B1RunAction*) G4RunManager::GetRunManager()->GetUserRunAction())->getPersistencyHandler();
+	// Run all digitizer modules.
+    G4DigiManager* digiManager = G4DigiManager::GetDMpointer();
+    G4DCtable* dcTable = digiManager->GetDCtable();
+    for (int i = 0; i < dcTable->entries(); i++) {
+        G4String dmName = dcTable->GetDMname(i);
+        G4VDigitizerModule* dm = digiManager->FindDigitizerModule(dmName);
+	if (dm) {
+	dm->Digitize();
+	}
+    }
+    G4Timer timer;
+    timer.Start();
+    // Process hits collections.
+    G4HCofThisEvent* hCof = event->GetHCofThisEvent();
+    if (hCof != NULL) {
+        for (int i = 0; i < hCof->GetCapacity(); ++i) {
+            G4VHitsCollection* hc = hCof->GetHC(i);
+            if (hc != NULL) {
+                if (dynamic_cast<G4SipmHitsCollection*>(hc)) {
+                    persistency->persist((G4SipmHitsCollection*) hc);
+                }
+            }
+        }
+    }
+    // Process digi collections.
+    G4DCofThisEvent* dCof = event->GetDCofThisEvent();
+    if (dCof != NULL) {
+        for (int i = 0; i < dCof->GetCapacity(); ++i) {
+            G4VDigiCollection* dc = dCof->GetDC(i);
+            if (dc != NULL) {
+                if (dynamic_cast<G4SipmDigiCollection*>(dc)) {
+                    persistency->persist((G4SipmDigiCollection*) dc);
+                }
+                if (dynamic_cast<G4SipmVoltageTraceDigiCollection*>(dc)) {
+                    persistency->persist((G4SipmVoltageTraceDigiCollection*) dc);
+                }
+            }
+        }
+    }
+    timer.Stop();
+    std::cout << "EventAction::EndOfEventAction(): persist time (" << timer << ")." << std::endl;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

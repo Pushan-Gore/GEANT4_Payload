@@ -33,10 +33,11 @@
 
 #include "G4UserRunAction.hh"
 #include "G4Accumulable.hh"
+#include "G4Timer.hh"
 #include "globals.hh"
 
 class G4Run;
-
+class PersistencyHandler;
 /// Run action class
 ///
 /// In EndOfRunAction(), it calculates the dose in the selected volume 
@@ -54,10 +55,13 @@ class B1RunAction : public G4UserRunAction
     virtual void   EndOfRunAction(const G4Run*);
 
     void AddEdep (G4double edep); 
+    PersistencyHandler* getPersistencyHandler() const;
 
   private:
     G4Accumulable<G4double> fEdep;
     G4Accumulable<G4double> fEdep2;
+    PersistencyHandler* persistencyHandler;
+    G4int stopped_count;
 };
 
 #endif

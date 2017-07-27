@@ -23,7 +23,12 @@ endif()
 #
 include(${Geant4_USE_FILE})
 include_directories(${PROJECT_SOURCE_DIR}/include)
-
+add_subdirectory(${PROJECT_SOURCE_DIR}/externals/g4sipm)
+include_directories(externals/g4sipm/g4sipm/include)
+include_directories(externals/g4sipm/externals/jansson/src)
+include_directories(externals/g4sipm/externals/gtest/include)
+include_directories(externals/g4sipm/sample/include)
+set(LIBS ${LIBS} boost_program_options g4sipm g4sipm_sample boost_date_time jansson)
 
 #----------------------------------------------------------------------------
 # Locate sources and headers for this project
@@ -36,8 +41,7 @@ file(GLOB headers ${PROJECT_SOURCE_DIR}/include/*.hh)
 # Add the executable, and link it to the Geant4 libraries
 #
 add_executable(Payload Payload.cc ${sources} ${headers})
-target_link_libraries(Payload ${Geant4_LIBRARIES})
-
+target_link_libraries(Payload g4sipm g4sipm_sample boost_program_options boost_date_time jansson ${Geant4_LIBRARIES})
 #Add GODDESS code here
 
 #------ Boost ------#
