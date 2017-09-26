@@ -35,6 +35,7 @@
 #include "PayloadSteppingAction.hh"
 #include "G4Accumulable.hh"
 #include "globals.hh"
+#include "counts.hh"
 
 class G4Run;
 
@@ -55,8 +56,6 @@ class B1RunAction : public G4UserRunAction
     virtual void   EndOfRunAction(const G4Run*);
 
     void AddEdep (G4double edep); 
-    //G4int stopped_count;
-    //G4int back_scatter_count;
 
 
   private:

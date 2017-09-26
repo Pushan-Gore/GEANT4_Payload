@@ -40,6 +40,7 @@
 
 #include "G4Event.hh"
 #include "G4RunManager.hh"
+#include "counts.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -65,6 +66,7 @@ void OpNoviceSteppingAction::UserSteppingAction(const G4Step* step)
 {
   G4int eventNumber = G4RunManager::GetRunManager()->
                                               GetCurrentEvent()->GetEventID();
+
 
   if (eventNumber != fEventNumber) {
      fEventNumber = eventNumber;
@@ -133,7 +135,7 @@ void OpNoviceSteppingAction::UserSteppingAction(const G4Step* step)
     stopped_count++;
   }
   
-  if((track->GetMomentum()[2] < 0) && (volume == "World")) {
+  if((track->GetParentID() == 0) && (track->GetMomentum()[2] < 0) && (volume == "World")) {
     G4cout << "Particle back scattered and is in " << volume << G4endl;
     back_scatter_count++;
   }

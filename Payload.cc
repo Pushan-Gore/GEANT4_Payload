@@ -52,6 +52,10 @@
 
 #include "Randomize.hh"
 
+#include "counts.hh"
+
+G4int stopped_count = 0;
+G4int back_scatter_count = 0;
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 int main(int argc,char** argv)

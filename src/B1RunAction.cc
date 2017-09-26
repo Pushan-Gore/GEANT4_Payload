@@ -41,6 +41,7 @@
 #include "G4LogicalVolume.hh"
 #include "G4UnitsTable.hh"
 #include "G4SystemOfUnits.hh"
+#include "counts.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -85,8 +86,8 @@ void B1RunAction::BeginOfRunAction(const G4Run*)
   // reset accumulables to their initial values
   G4AccumulableManager* accumulableManager = G4AccumulableManager::Instance();
   accumulableManager->Reset();
-  //stopped_count = 0;
-  //back_scatter_count = 0;
+  stopped_count = 0;
+  back_scatter_count = 0;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -163,14 +164,12 @@ void B1RunAction::EndOfRunAction(const G4Run* run)
      << " Cumulative energy of photons generated (approx) : " 
      << G4BestUnit(particleEnergy - edep,"Energy") 
      << G4endl
-/*
      << "Total particles stopped : "
      << stopped_count  
      << G4endl
      << "Total particles back_scattered : "
      << back_scatter_count  
      << G4endl
-*/
      << "------------------------------------------------------------"
      << G4endl;
 }
