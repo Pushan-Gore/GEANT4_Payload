@@ -1,48 +1,21 @@
 /vis/filtering/trajectories/create/particleFilter
 /vis/filtering/trajectories/particleFilter-0/add e-
+/vis/filtering/trajectories/particleFilter-0/add proton
+
+#NOTE: this is set to 1 for minimum information at each step.
+# Setting it to 2 will print all information about secondary particles
+#0,-1 will set it to silent configuration
+/tracking/verbose 
 
 /vis/viewer/set/viewpointVector -1 0 0 
 /vis/viewer/zoom 21
 #/vis/ogl/set/exportFormat jpg
 
-/gun/particle e-
+#/gun/particle e-
+/gun/particle proton
 
-/gun/energy 50 keV
-/run/beamOn
-/vis/ogl/export Ogl_output/electron_50keV_800um
+/gun/energy 100 MeV
+/run/beamOn 500
+/vis/ogl/export Ogl_output/500particles_100MeV_proton
 
-/gun/energy 100 keV
-/run/beamOn
-/vis/ogl/export Ogl_output/electron_100keV_800um
 
-/gun/energy 150 keV
-/run/beamOn
-/vis/ogl/export Ogl_output/electron_150keV_800um
-
-/gun/energy 200 keV
-/run/beamOn
-/vis/ogl/export Ogl_output/electron_200keV_800um
-
-/gun/energy 250 keV
-/run/beamOn
-/vis/ogl/export Ogl_output/electron_250keV_800um
-
-/gun/energy 300 keV
-/run/beamOn
-/vis/ogl/export Ogl_output/electron_300keV_800um
-
-/gun/energy 350 keV
-/run/beamOn
-/vis/ogl/export Ogl_output/electron_350keV_800um
-
-/gun/energy 400 keV
-/run/beamOn
-/vis/ogl/export Ogl_output/electron_400keV_800um
-
-/gun/energy 450 keV
-/run/beamOn
-/vis/ogl/export Ogl_output/electron_450keV_800um
-
-/gun/energy 500 keV
-/run/beamOn
-/vis/ogl/export Ogl_output/electron_500keV_800um

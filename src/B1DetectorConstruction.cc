@@ -118,7 +118,9 @@ G4VPhysicalVolume* B1DetectorConstruction::Construct()
                 0,                                                        //copy number
                 checkOverlaps);                                           //overlaps checking
 
-    
+   
+    vacuum_volume = logicWorld;
+ 
     // Plastic Detector
     G4Material* pl_detector_mat = nist->FindOrBuildMaterial("G4_PLASTIC_SC_VINYLTOLUENE");
     G4ThreeVector pos_pl = G4ThreeVector(0, 0, 0);
@@ -146,7 +148,7 @@ G4VPhysicalVolume* B1DetectorConstruction::Construct()
     // Box Shape shape       
     G4double pl_detector_dx = 5*cm;
     G4double pl_detector_dy = 5*cm;
-    G4double pl_detector_dz = 0.8*mm;//4.74*cm;        //Detector Thickness      
+    G4double pl_detector_dz = 1.2*mm;//4.74*cm;        //Detector Thickness      
 
     G4Box* solidpl_detector =
     new G4Box("pl_detector",
@@ -158,7 +160,7 @@ G4VPhysicalVolume* B1DetectorConstruction::Construct()
     new G4LogicalVolume(solidpl_detector,   //its solid
         pl_detector_mat,                    //its material
         "pl_detector");                     //its name
-
+    
     new G4PVPlacement(0,                    //no rotation
         pos_pl,                                //at position
         logicpl_detector,                   //its logical volume
@@ -170,12 +172,13 @@ G4VPhysicalVolume* B1DetectorConstruction::Construct()
     
     // Set pl_detector as scoring volume
     fScoringVolume = logicpl_detector;
+    G4cout << "Scoring volume set to Plastic detector" << G4endl;
 
     //CsI Crystal
     // Box Shape shape       
     G4double csi_crystal_dx = 5*cm;
     G4double csi_crystal_dy = 5*cm;
-    G4double csi_crystal_dz = 1*cm;       //Crystal Thickness      
+    G4double csi_crystal_dz = 3.2*cm;       //Crystal Thickness      
     
     G4Material* csi_crystal_mat = nist->FindOrBuildMaterial("G4_CESIUM_IODIDE");
     G4ThreeVector pos_csi = G4ThreeVector(0, 0, (pl_detector_dz*0.5) + (csi_crystal_dz*0.5));
@@ -224,7 +227,7 @@ G4VPhysicalVolume* B1DetectorConstruction::Construct()
         0,                                  //copy number
         checkOverlaps);                     //overlaps checking
 
-    /* End of Detector and crystal construction*/
+    /* End of Detector and crystal construction */
 
 
     G4cout << G4endl << "The materials defined are : " << G4endl << G4endl;  
@@ -239,7 +242,7 @@ G4VPhysicalVolume* B1DetectorConstruction::Construct()
 
 
     // Need to remove this IMPORTANT
-    //fScoringVolume = logiccsi_crystal;
+   fScoringVolume = logiccsi_crystal;
 
     // Always return the physical World
     return physWorld;

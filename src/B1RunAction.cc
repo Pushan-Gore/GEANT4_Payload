@@ -85,7 +85,8 @@ void B1RunAction::BeginOfRunAction(const G4Run*)
   // reset accumulables to their initial values
   G4AccumulableManager* accumulableManager = G4AccumulableManager::Instance();
   accumulableManager->Reset();
-
+  //stopped_count = 0;
+  //back_scatter_count = 0;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -162,6 +163,14 @@ void B1RunAction::EndOfRunAction(const G4Run* run)
      << " Cumulative energy of photons generated (approx) : " 
      << G4BestUnit(particleEnergy - edep,"Energy") 
      << G4endl
+/*
+     << "Total particles stopped : "
+     << stopped_count  
+     << G4endl
+     << "Total particles back_scattered : "
+     << back_scatter_count  
+     << G4endl
+*/
      << "------------------------------------------------------------"
      << G4endl;
 }
@@ -170,8 +179,15 @@ void B1RunAction::EndOfRunAction(const G4Run* run)
 
 void B1RunAction::AddEdep(G4double edep)
 {
+  const B1PrimaryGeneratorAction* generatorAction
+   = static_cast<const B1PrimaryGeneratorAction*>
+     (G4RunManager::GetRunManager()->GetUserPrimaryGeneratorAction());
+  const G4ParticleGun* particleGun = generatorAction->GetParticleGun();
+  G4double particleEnergy = particleGun->GetParticleEnergy();
   fEdep  += edep;
   fEdep2 += edep*edep;
+  //if ((edep <= (particleEnergy + 1e-06)) && (edep >= (particleEnergy - 1e-06)))
+  //	stopped_count++;
 }
 
 

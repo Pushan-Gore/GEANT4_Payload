@@ -79,7 +79,8 @@ int main(int argc,char** argv)
   runManager->SetUserInitialization(DetectorConstruction);
 
   // 2. Physics list
-  LXePhysicsList* physicsList = new LXePhysicsList(); // If this doesn't work add G4VModularPhysicsList
+  //LXePhysicsList* 
+  G4VModularPhysicsList* physicsList = new QBBC();//LXePhysicsList(); // If this doesn't work add G4VModularPhysicsList
   //physicsList->SetVerboseLevel(1);
   runManager->SetUserInitialization(physicsList);
 
