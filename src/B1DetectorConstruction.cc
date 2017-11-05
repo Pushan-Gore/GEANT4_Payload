@@ -242,7 +242,7 @@ G4VPhysicalVolume* B1DetectorConstruction::Construct()
 
 
     // Need to remove this IMPORTANT
-   fScoringVolume = logiccsi_crystal;
+  // fScoringVolume = logiccsi_crystal;
 
     // Always return the physical World
     return physWorld;

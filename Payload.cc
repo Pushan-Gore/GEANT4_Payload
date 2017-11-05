@@ -56,6 +56,10 @@
 
 G4int stopped_count = 0;
 G4int back_scatter_count = 0;
+G4double plastic_energy_dep = 0;
+G4double csi_energy_dep = 0;
+G4double non_primary_energy = 0;
+G4long scintillation_count = 0;
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 int main(int argc,char** argv)
@@ -84,7 +88,8 @@ int main(int argc,char** argv)
 
   // 2. Physics list
   //LXePhysicsList* 
-  G4VModularPhysicsList* physicsList = new QBBC();//LXePhysicsList(); // If this doesn't work add G4VModularPhysicsList
+  G4VModularPhysicsList* physicsList = new QBBC(); // If this doesn't work add G4VModularPhysicsList
+  //G4VModularPhysicsList* physicsList = new LXePhysicsList(); // If this doesn't work add G4VModularPhysicsList
   //physicsList->SetVerboseLevel(1);
   runManager->SetUserInitialization(physicsList);
 

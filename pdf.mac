@@ -11,11 +11,11 @@
 /vis/viewer/zoom 21
 #/vis/ogl/set/exportFormat jpg
 
-/gun/particle e-
-#/gun/particle proton
+#/gun/particle e-
+/gun/particle proton
 
-/gun/energy 4 MeV
-/run/beamOn 100
-/vis/ogl/export Ogl_output/500particles_100MeV_proton
+/gun/energy 50 MeV
+/run/beamOn 2
+#/vis/ogl/export Ogl_output/500particles_6MeV_proton
 
 
