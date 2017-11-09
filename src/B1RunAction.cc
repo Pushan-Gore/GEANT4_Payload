@@ -43,6 +43,7 @@
 #include "G4LogicalVolume.hh"
 #include "G4UnitsTable.hh"
 #include "G4SystemOfUnits.hh"
+#include "counts.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -93,7 +94,11 @@ void B1RunAction::BeginOfRunAction(const G4Run*)
   G4AccumulableManager* accumulableManager = G4AccumulableManager::Instance();
   accumulableManager->Reset();
   stopped_count = 0;
-
+  back_scatter_count = 0;
+  plastic_energy_dep = 0;
+  csi_energy_dep = 0;
+  non_primary_energy = 0;
+  scintillation_count = 0;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -164,14 +169,31 @@ void B1RunAction::EndOfRunAction(const G4Run* run)
      << " Cumulated dose per run, in scoring volume : " 
      << G4BestUnit(dose,"Dose") << " rms = " << G4BestUnit(rmsDose,"Dose")
      << G4endl
-     << " Energy deposited in the detector : " 
-     << G4BestUnit(edep,"Energy") 
-     << G4endl
      << " Cumulative energy of photons generated (approx) : " 
      << G4BestUnit(particleEnergy - edep,"Energy") 
      << G4endl
      << "Total particles stopped : "
      << stopped_count
+     << "Energy Deposited in Plastic : "
+     << G4BestUnit(plastic_energy_dep, "Energy")  
+     << G4endl
+     << "Energy Deposited in CSI : "
+     << G4BestUnit(csi_energy_dep, "Energy")  
+     << G4endl
+     << "Total Energy Deposited in both detectors : "
+     << G4BestUnit(plastic_energy_dep + csi_energy_dep, "Energy")  
+     << G4endl
+     << "Energy Deposited by non primaries : "
+     << G4BestUnit(non_primary_energy, "Energy")  
+     << G4endl
+     << "Total particles stopped : "
+     << stopped_count  
+     << G4endl
+     << "Total particles back_scattered : "
+     << back_scatter_count  
+     << G4endl
+     << "Total Scintillation count : "
+     << scintillation_count 
      << G4endl
      << "------------------------------------------------------------"
      << G4endl;
@@ -181,16 +203,15 @@ void B1RunAction::EndOfRunAction(const G4Run* run)
 
 void B1RunAction::AddEdep(G4double edep)
 {
-  const B1PrimaryGeneratorAction* generatorAction                               
-    = static_cast<const B1PrimaryGeneratorAction*>
-    (G4RunManager::GetRunManager()->GetUserPrimaryGeneratorAction());
+  const B1PrimaryGeneratorAction* generatorAction
+   = static_cast<const B1PrimaryGeneratorAction*>
+     (G4RunManager::GetRunManager()->GetUserPrimaryGeneratorAction());
   const G4ParticleGun* particleGun = generatorAction->GetParticleGun();
   G4double particleEnergy = particleGun->GetParticleEnergy();
-
   fEdep  += edep;
   fEdep2 += edep*edep;
-  if (edep == particleEnergy)
-      stopped_count++;
+  //if ((edep <= (particleEnergy + 1e-06)) && (edep >= (particleEnergy - 1e-06)))
+  //	stopped_count++;
 }
 
 PersistencyHandler* B1RunAction::getPersistencyHandler() const {                  

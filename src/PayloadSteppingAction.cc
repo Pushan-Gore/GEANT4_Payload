@@ -40,16 +40,23 @@
 
 #include "G4Event.hh"
 #include "G4RunManager.hh"
+#include "counts.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 OpNoviceSteppingAction::OpNoviceSteppingAction(B1EventAction* eventAction)
-: G4UserSteppingAction(),fEventAction(eventAction),
+: G4UserSteppingAction(), fEventAction(eventAction),
   fScoringVolume(0)
 { 
   fScintillationCounter = 0;
   fCerenkovCounter      = 0;
   fEventNumber = -1;
+  stopped_count = 0;
+  back_scatter_count = 0;
+  plastic_energy_dep = 0;
+  csi_energy_dep = 0;
+  non_primary_energy = 0;
+  scintillation_count = 0;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -64,6 +71,7 @@ void OpNoviceSteppingAction::UserSteppingAction(const G4Step* step)
   G4int eventNumber = G4RunManager::GetRunManager()->
                                               GetCurrentEvent()->GetEventID();
 
+
   if (eventNumber != fEventNumber) {
      fEventNumber = eventNumber;
      fScintillationCounter = 0;
@@ -71,7 +79,6 @@ void OpNoviceSteppingAction::UserSteppingAction(const G4Step* step)
   }
 
   G4Track* track = step->GetTrack();
-
   G4String ParticleName = track->GetDynamicParticle()->
                                  GetParticleDefinition()->GetParticleName();
 
@@ -87,36 +94,71 @@ void OpNoviceSteppingAction::UserSteppingAction(const G4Step* step)
            if(secondaries->at(i)->GetDynamicParticle()->GetParticleDefinition()
                == G4OpticalPhoton::OpticalPhotonDefinition()){
               if (secondaries->at(i)->GetCreatorProcess()->GetProcessName()
-               == "Scintillation")fScintillationCounter++;
-              if (secondaries->at(i)->GetCreatorProcess()->GetProcessName()
-               == "Cerenkov")fCerenkovCounter++;
+               == "Scintillation") {
+		//fScintillationCounter++;
+		scintillation_count++;
+ 	      }
+              //if (secondaries->at(i)->GetCreatorProcess()->GetProcessName()
+              // == "Cerenkov")fCerenkovCounter++;
            }
         }
+	//non_primary_energy += secondaries->at(i)->GetKineticEnergy();
      }
   }
 
   //G4cout << "Cerenkov at step: " << fCerenkovCounter << G4endl;
-  
+ 
+  /* 
   if (!fScoringVolume) {
     const B1DetectorConstruction* detectorConstruction
       = static_cast<const B1DetectorConstruction*>
         (G4RunManager::GetRunManager()->GetUserDetectorConstruction());
-    fScoringVolume = detectorConstruction->GetScoringVolume();
-  }
+    G4LogicalVolume* fScoringVolume = detectorConstruction->GetScoringVolume();
+    //G4cout << "Scoring volume is : " << temp_ScoringVolume << G4endl;
+    //G4cout << "F_Scoring volume is : " << fScoringVolume << G4endl;
+    //G4cout << "Vacuum volume is : " << vacuum_volume << G4endl;
+  }*/
 
-  // get volume of the current step
-  G4LogicalVolume* volume
+  // get name of volume of the current step
+  G4String volume 
     = step->GetPreStepPoint()->GetTouchableHandle()
-      ->GetVolume()->GetLogicalVolume();
+      ->GetVolume()->GetLogicalVolume()->GetName();
+  
+  //G4cout << "volume is : " << volume << G4endl;
 
   // check if we are in scoring volume
-  if (volume != fScoringVolume) return;
+  //if (volume != fScoringVolume) return;
 
   // collect energy deposited in this step
   G4double edepStep = step->GetTotalEnergyDeposit();
   fEventAction->AddEdep(edepStep);
   
-  G4cout << "Scintillation count (at step) : " << fScintillationCounter << " ,and Energy deposited (at step) :  "<< G4BestUnit(edepStep,"Energy") <<G4endl;
+  //G4cout << "Scintillation count (at step) : " << fScintillationCounter << " ,and Energy deposited (at step) :  "<< G4BestUnit(edepStep,"Energy") <<G4endl;
+  //G4cout << "Stopped count : " << stopped_count << G4endl;
+  //G4cout << "Back Scatter count : " << back_scatter_count << G4endl;
+
+  if((track->GetParentID() == 0) && (track->GetVelocity() == 0) && (track->GetKineticEnergy() == 0)) {
+    //G4cout << "Particle stopped" << G4endl;
+    stopped_count++;
+  }
+  
+  if((track->GetParentID() == 0) && (volume == "pl_detector")) {
+    plastic_energy_dep = plastic_energy_dep + edepStep;
+  }
+  else if((track->GetParentID() == 0) && (volume == "csi_crystal")) {
+    csi_energy_dep = csi_energy_dep + edepStep;
+  }
+  else if((track->GetParentID() != 0)) { 
+// && ((volume == "pl_detector") || (volume == "csi_crystal"))) 
+    non_primary_energy = non_primary_energy + edepStep;
+  }
+  
+  if((track->GetParentID() == 0) && (track->GetMomentum()[2] < 0) && (volume == "World")) {
+    //G4cout << "Particle back scattered and is in " << volume << G4endl;
+    back_scatter_count++;
+  }
+  //G4cout << "Volume is : " << volume << G4endl;
+  //G4cout << "Energy Deposited till now : " << G4BestUnit(csi_energy_dep + plastic_energy_dep, "Energy") << G4endl;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

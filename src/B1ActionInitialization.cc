@@ -49,8 +49,8 @@ B1ActionInitialization::~B1ActionInitialization()
 
 void B1ActionInitialization::BuildForMaster() const
 {
-  B1RunAction* runAction = new B1RunAction;
-  SetUserAction(runAction);
+  //B1RunAction* runAction = new B1RunAction;
+  //SetUserAction(runAction);
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

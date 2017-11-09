@@ -32,9 +32,11 @@
 #define B1RunAction_h 1
 
 #include "G4UserRunAction.hh"
+#include "PayloadSteppingAction.hh"
 #include "G4Accumulable.hh"
 #include "G4Timer.hh"
 #include "globals.hh"
+#include "counts.hh"
 
 class G4Run;
 class PersistencyHandler;
@@ -56,6 +58,7 @@ class B1RunAction : public G4UserRunAction
 
     void AddEdep (G4double edep); 
     PersistencyHandler* getPersistencyHandler() const;
+
 
   private:
     G4Accumulable<G4double> fEdep;
