@@ -1,0 +1,18 @@
+Change the shared libraries flags in cmake command in bash
+
+Change the CMakeCache.txt file to change the Boolean of Shared of Janssons, etc etc to ON
+
+Uncomment all boost commands in CMakeList.txt
+
+
+rm CMakeCache.txt 
+
+source ~/Pushan/CSAT_TASK/GEANT4/geant4.10.3-install/bin/geant4.sh ;export GODDESS="/home/thenecromancer/Pushan/CSAT_TASK/      GEANT4/GODDeSS/" ;cmake -DBUILD_SHARED_LIBS=TRUE -DCMAKE_CXX_FLAGS=-fPIC -DCMAKE_C_FLAGS=-fPIC -DGeant4_DIR=~/Pushan/CSAT_TASK/GEANT4/geant4.10.3-install/share/          Geant4-10.3.0 ~/Desktop/Payload_dir/
+
+source ~/Pushan/CSAT_TASK/GEANT4/geant4.10.3-install/bin/geant4.sh ;export GODDESS="/home/thenecromancer/Pushan/CSAT_TASK/GEANT4/GODDeSS/" ;cmake -DBUILD_SHARED_LIBS=TRUE -DCMAKE_CXX_FLAGS=-fPIC -DCMAKE_C_FLAGS=-fPIC -DBOOST_ROOT=/usr/include/boost/ -DGeant4_DIR=~/Pushan/CSAT_TASK/GEANT4/geant4.10.3-install/share/Geant4-10.3.0 ~/Desktop/Payload_dir/
+
+
+
+
+make
+

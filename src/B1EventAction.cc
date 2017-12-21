@@ -57,7 +57,7 @@ B1EventAction::B1EventAction(B1RunAction* runAction)
     fEdep(0.),
     fHodHCID(-1)
 {
-    G4RunManager::GetRunManager()->SetPrintProgress(1);
+    G4RunManager::GetRunManager()->SetPrintProgress(0);
 } 
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

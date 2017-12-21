@@ -154,7 +154,7 @@ G4VPhysicalVolume* B1DetectorConstruction::Construct()
     Scnt_MPT->AddConstProperty("FASTSCINTILLATIONRISETIME", 0.7*ns);
     //Scnt_MPT->AddConstProperty("YIELDRATIO", 1.);
 
-    Scnt_MPT->DumpTable();
+    //Scnt_MPT->DumpTable();
     pl_detector_mat->SetMaterialPropertiesTable(Scnt_MPT);
     pl_detector_mat->GetIonisation()->SetBirksConstant(0.111*mm/MeV);
 
@@ -216,7 +216,7 @@ G4VPhysicalVolume* B1DetectorConstruction::Construct()
     //CSI_Crystal_MPT->AddConstProperty("SLOWSCINTILLATIONRISETIME", 1000.*ns);
     //CSI_Crystal_MPT->AddConstProperty("YIELDRATIO", 1.);
 
-    CSI_Crystal_MPT->DumpTable();
+    //CSI_Crystal_MPT->DumpTable();
     csi_crystal_mat->SetMaterialPropertiesTable(CSI_Crystal_MPT);
     csi_crystal_mat->GetIonisation()->SetBirksConstant(0.*mm/MeV);
 
@@ -243,8 +243,8 @@ G4VPhysicalVolume* B1DetectorConstruction::Construct()
     /* End of Detector and crystal construction */
 
 
-    G4cout << G4endl << "The materials defined are : " << G4endl << G4endl;  
-    G4cout << *(G4Material::GetMaterialTable()) << G4endl; 
+    //G4cout << G4endl << "The materials defined are : " << G4endl << G4endl;  
+    //G4cout << *(G4Material::GetMaterialTable()) << G4endl; 
 
     /* If photons are not visible remove this block*/
     auto visAttributes = new G4VisAttributes(G4Colour(0.8888,0.0,0.0));           

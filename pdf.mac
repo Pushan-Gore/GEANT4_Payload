@@ -1,21 +1,25 @@
-/vis/filtering/trajectories/create/particleFilter
-/vis/filtering/trajectories/particleFilter-0/add e-
-/vis/filtering/trajectories/particleFilter-0/add proton
+#/vis/filtering/trajectories/create/particleFilter
+#/vis/filtering/trajectories/particleFilter-0/add e-
+#/vis/filtering/trajectories/particleFilter-0/add proton
 
 #NOTE: this is set to 1 for minimum information at each step.
 # Setting it to 2 will print all information about secondary particles
 #0,-1 will set it to silent configuration
+/control/verbose 0
+/run/verbose 0
+
 /tracking/verbose 
 
-/vis/viewer/set/viewpointVector -1 0 0 
-/vis/viewer/zoom 21
+#/vis/viewer/set/viewpointVector -1 0 0 
+#/vis/viewer/zoom 21
 #/vis/ogl/set/exportFormat jpg
 
 #/gun/particle e-
 /gun/particle proton
 
-/gun/energy 50 MeV
-/run/beamOn 2
+/gun/energy 50 keV
+/run/beamOn 100
+/run/beamOn 1
 #/vis/ogl/export Ogl_output/500particles_6MeV_proton
 
 

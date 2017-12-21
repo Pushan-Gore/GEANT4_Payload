@@ -64,7 +64,6 @@ class B1RunAction : public G4UserRunAction
     G4Accumulable<G4double> fEdep;
     G4Accumulable<G4double> fEdep2;
     PersistencyHandler* persistencyHandler;
-    G4int stopped_count;
 };
 
 #endif

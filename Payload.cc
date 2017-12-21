@@ -67,7 +67,7 @@ int main(int argc,char** argv)
   // Detect interactive mode (if no arguments) and define UI session
   G4UIExecutive* ui = 0;
   if ( argc == 1 ) {
-    ui = new G4UIExecutive(argc, argv);
+    //ui = new G4UIExecutive(argc, argv);
   }
 
   // Choose the Random engine
@@ -90,18 +90,21 @@ int main(int argc,char** argv)
 
   // 2. Physics list
   //LXePhysicsList* 
-  G4VModularPhysicsList* physicsList = new QBBC(); // If this doesn't work add G4VModularPhysicsList
+  G4VModularPhysicsList* physicsList = new QBBC(0, "QBBCPhysics"); // If this doesn't work add G4VModularPhysicsList
   //G4VModularPhysicsList* physicsList = new LXePhysicsList(); // If this doesn't work add G4VModularPhysicsList
-  //physicsList->SetVerboseLevel(1);
+  physicsList->SetVerboseLevel(0);
   runManager->SetUserInitialization(physicsList);
 
 
   // 3. User action initialization
   runManager->SetUserInitialization(new B1ActionInitialization());
-  
+
+  //Initialize G4 kernel
+  runManager->Initialize();
+
   // Initialize visualization
-  G4VisManager* visManager = new G4VisExecutive("quite");
-  visManager->Initialize();
+  //G4VisManager* visManager = new G4VisExecutive("quite");
+  //visManager->Initialize();
 
   // Get the pointer to the User Interface manager
   G4UImanager* UImanager = G4UImanager::GetUIpointer();
@@ -121,7 +124,7 @@ int main(int argc,char** argv)
     delete ui;
   }
 
-  delete visManager;
+  //delete visManager;
   delete runManager;
 }
 

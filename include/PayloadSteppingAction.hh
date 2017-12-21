@@ -49,8 +49,6 @@ class OpNoviceSteppingAction : public G4UserSteppingAction
 
     // method from the base class
     virtual void UserSteppingAction(const G4Step*);
-    //G4int stopped_count;
-    //G4int back_scatter_count;
 
   private:
     B1EventAction* fEventAction;

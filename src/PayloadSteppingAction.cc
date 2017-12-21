@@ -95,9 +95,9 @@ void OpNoviceSteppingAction::UserSteppingAction(const G4Step* step)
                == G4OpticalPhoton::OpticalPhotonDefinition()){
               if (secondaries->at(i)->GetCreatorProcess()->GetProcessName()
                == "Scintillation") {
-		//fScintillationCounter++;
-		scintillation_count++;
- 	      }
+	            //fScintillationCounter++;
+        		scintillation_count++;
+ 	          }
               //if (secondaries->at(i)->GetCreatorProcess()->GetProcessName()
               // == "Cerenkov")fCerenkovCounter++;
            }
@@ -133,10 +133,6 @@ void OpNoviceSteppingAction::UserSteppingAction(const G4Step* step)
   G4double edepStep = step->GetTotalEnergyDeposit();
   fEventAction->AddEdep(edepStep);
   
-  //G4cout << "Scintillation count (at step) : " << fScintillationCounter << " ,and Energy deposited (at step) :  "<< G4BestUnit(edepStep,"Energy") <<G4endl;
-  //G4cout << "Stopped count : " << stopped_count << G4endl;
-  //G4cout << "Back Scatter count : " << back_scatter_count << G4endl;
-
   if((track->GetParentID() == 0) && (track->GetVelocity() == 0) && (track->GetKineticEnergy() == 0)) {
     //G4cout << "Particle stopped" << G4endl;
     stopped_count++;
@@ -154,9 +150,9 @@ void OpNoviceSteppingAction::UserSteppingAction(const G4Step* step)
   }
   
   if((track->GetParentID() == 0) && (track->GetMomentum()[2] < 0) && (volume == "World")) {
-    //G4cout << "Particle back scattered and is in " << volume << G4endl;
     back_scatter_count++;
   }
+  //G4cout << "Particle back scattered and is in " << track->GetParentID() << " " << track->GetKineticEnergy() << " " << track->GetVelocity() << G4endl;
   //G4cout << "Volume is : " << volume << G4endl;
   //G4cout << "Energy Deposited till now : " << G4BestUnit(csi_energy_dep + plastic_energy_dep, "Energy") << G4endl;
 }

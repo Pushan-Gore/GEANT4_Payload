@@ -42,17 +42,18 @@ file(GLOB headers ${PROJECT_SOURCE_DIR}/include/*.hh)
 #
 add_executable(Payload Payload.cc ${sources} ${headers})
 target_link_libraries(Payload g4sipm g4sipm_sample boost_program_options boost_date_time jansson ${Geant4_LIBRARIES})
+set(Boost_INCLUDE_DIR:PATH "/usr/include")
 #Add GODDESS code here
 
 #------ Boost ------#
 # Find Boost package
-#find_package(Boost REQUIRED regex)
+find_package(Boost REQUIRED regex)
 
 # Add include directories to the list of directories searched by the compiler for include files:
-#include_directories(${Boost_INCLUDE_DIRS})
+include_directories(${Boost_INCLUDE_DIR})
 
 # Set Boost library list
-#set(LIBS_BOOST boost_regex)
+set(LIBS_BOOST boost_regex)
 
 #------ zlib ------#
 # Find zlib package
@@ -85,8 +86,7 @@ target_link_libraries(Payload g4sipm g4sipm_sample boost_program_options boost_d
 #include_directories(${GODDESS_INCLUDE_DIR}/G4PhotonDetector/include)
 #include_directories(${GODDESS_INCLUDE_DIR}/DataProcessing/include)
 
-#target_link_libraries(Payload ${LIBS_BOOST} ${LIBS_ZLIB} ${LIBS_GODDESS})
-#add_dependencies(Payload ${LIBS_BOOST} ${LIBS_ZLIB} ${LIBS_GODDESS})
+#target_link_libraries(Payload ${LIBS_BOOST})
 
 #Goddess code ends here
 
@@ -95,6 +95,13 @@ target_link_libraries(Payload g4sipm g4sipm_sample boost_program_options boost_d
 # build B1. This is so that we can run the executable directly because it
 # relies on these scripts being in the current working directory.
 #
+
+#SET_TARGET_PROPERTIES(Payload PROPERTIES COMPILE_FLAGS -fPIC)
+#set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+#set(CMAKE_POSITION_INDEPENDENT_CODE TRUE)
+#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
+#set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fPIC")
+
 set(PAYLOAD_SCRIPTS
   Payload.in
   Payload.out

@@ -50,8 +50,7 @@
 B1RunAction::B1RunAction()
 : G4UserRunAction(),
   fEdep(0.),
-  fEdep2(0.),
-  stopped_count(0.)
+  fEdep2(0.)
 { 
   // add new units for dose
   // 
@@ -172,8 +171,6 @@ void B1RunAction::EndOfRunAction(const G4Run* run)
      << " Cumulative energy of photons generated (approx) : " 
      << G4BestUnit(particleEnergy - edep,"Energy") 
      << G4endl
-     << "Total particles stopped : "
-     << stopped_count
      << "Energy Deposited in Plastic : "
      << G4BestUnit(plastic_energy_dep, "Energy")  
      << G4endl
@@ -187,7 +184,7 @@ void B1RunAction::EndOfRunAction(const G4Run* run)
      << G4BestUnit(non_primary_energy, "Energy")  
      << G4endl
      << "Total particles stopped : "
-     << stopped_count  
+     << stopped_count / 2  
      << G4endl
      << "Total particles back_scattered : "
      << back_scatter_count  
@@ -210,8 +207,6 @@ void B1RunAction::AddEdep(G4double edep)
   G4double particleEnergy = particleGun->GetParticleEnergy();
   fEdep  += edep;
   fEdep2 += edep*edep;
-  //if ((edep <= (particleEnergy + 1e-06)) && (edep >= (particleEnergy - 1e-06)))
-  //	stopped_count++;
 }
 
 PersistencyHandler* B1RunAction::getPersistencyHandler() const {                  
