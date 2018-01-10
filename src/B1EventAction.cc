@@ -80,6 +80,50 @@ void B1EventAction::BeginOfEventAction(const G4Event*)
 
 void B1EventAction::EndOfEventAction(const G4Event* event)
 {  
+    PersistencyHandler* persistency =
+        ((B1RunAction*) G4RunManager::GetRunManager()->GetUserRunAction())->getPersistencyHandler();
+	// Run all digitizer modules.
+    G4DigiManager* digiManager = G4DigiManager::GetDMpointer();
+    G4DCtable* dcTable = digiManager->GetDCtable();
+    for (int i = 0; i < dcTable->entries(); i++) {
+        G4String dmName = dcTable->GetDMname(i);
+        G4VDigitizerModule* dm = digiManager->FindDigitizerModule(dmName);
+	    if (dm) {
+	        dm->Digitize();
+	    }
+    }
+    G4Timer timer;
+    timer.Start();
+    // Process hits collections.
+    G4HCofThisEvent* hCof = event->GetHCofThisEvent();
+    if (hCof != NULL) {
+        for (int i = 0; i < hCof->GetCapacity(); ++i) {
+            G4VHitsCollection* hc = hCof->GetHC(i);
+            if (hc != NULL) {
+                if (dynamic_cast<G4SipmHitsCollection*>(hc)) {
+                    persistency->persist((G4SipmHitsCollection*) hc);
+                }
+            }
+        }
+    }
+    // Process digi collections.
+    G4DCofThisEvent* dCof = event->GetDCofThisEvent();
+    if (dCof != NULL) {
+        for (int i = 0; i < dCof->GetCapacity(); ++i) {
+            G4VDigiCollection* dc = dCof->GetDC(i);
+            if (dc != NULL) {
+                if (dynamic_cast<G4SipmDigiCollection*>(dc)) {
+                    persistency->persist((G4SipmDigiCollection*) dc);
+                }
+                if (dynamic_cast<G4SipmVoltageTraceDigiCollection*>(dc)) {
+                    persistency->persist((G4SipmVoltageTraceDigiCollection*) dc);
+                }
+            }
+        }
+    }
+    timer.Stop();
+    //std::cout << "EventAction::EndOfEventAction(): persist time (" << timer << ")." << std::endl;
+    
     // accumulate statistics in run action
     fRunAction->AddEdep(fEdep);
     auto hce = event->GetHCofThisEvent();
@@ -113,50 +157,6 @@ void B1EventAction::EndOfEventAction(const G4Event* event)
       hit->Print();
     }
     */
-    
-    PersistencyHandler* persistency =
-        ((B1RunAction*) G4RunManager::GetRunManager()->GetUserRunAction())->getPersistencyHandler();
-	// Run all digitizer modules.
-    G4DigiManager* digiManager = G4DigiManager::GetDMpointer();
-    G4DCtable* dcTable = digiManager->GetDCtable();
-    for (int i = 0; i < dcTable->entries(); i++) {
-        G4String dmName = dcTable->GetDMname(i);
-        G4VDigitizerModule* dm = digiManager->FindDigitizerModule(dmName);
-	if (dm) {
-	dm->Digitize();
-	}
-    }
-    G4Timer timer;
-    timer.Start();
-    // Process hits collections.
-    G4HCofThisEvent* hCof = event->GetHCofThisEvent();
-    if (hCof != NULL) {
-        for (int i = 0; i < hCof->GetCapacity(); ++i) {
-            G4VHitsCollection* hc = hCof->GetHC(i);
-            if (hc != NULL) {
-                if (dynamic_cast<G4SipmHitsCollection*>(hc)) {
-                    persistency->persist((G4SipmHitsCollection*) hc);
-                }
-            }
-        }
-    }
-    // Process digi collections.
-    G4DCofThisEvent* dCof = event->GetDCofThisEvent();
-    if (dCof != NULL) {
-        for (int i = 0; i < dCof->GetCapacity(); ++i) {
-            G4VDigiCollection* dc = dCof->GetDC(i);
-            if (dc != NULL) {
-                if (dynamic_cast<G4SipmDigiCollection*>(dc)) {
-                    persistency->persist((G4SipmDigiCollection*) dc);
-                }
-                if (dynamic_cast<G4SipmVoltageTraceDigiCollection*>(dc)) {
-                    persistency->persist((G4SipmVoltageTraceDigiCollection*) dc);
-                }
-            }
-        }
-    }
-    timer.Stop();
-    std::cout << "EventAction::EndOfEventAction(): persist time (" << timer << ")." << std::endl;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

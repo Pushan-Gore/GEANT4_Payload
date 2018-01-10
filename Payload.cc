@@ -60,6 +60,7 @@ G4double plastic_energy_dep = 0;
 G4double csi_energy_dep = 0;
 G4double non_primary_energy = 0;
 G4long scintillation_count = 0;
+char filename[20] = {"default"};
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 int main(int argc,char** argv)
@@ -67,7 +68,7 @@ int main(int argc,char** argv)
   // Detect interactive mode (if no arguments) and define UI session
   G4UIExecutive* ui = 0;
   if ( argc == 1 ) {
-    //ui = new G4UIExecutive(argc, argv);
+    ui = new G4UIExecutive(argc, argv);
   }
 
   // Choose the Random engine
@@ -103,8 +104,8 @@ int main(int argc,char** argv)
   runManager->Initialize();
 
   // Initialize visualization
-  //G4VisManager* visManager = new G4VisExecutive("quite");
-  //visManager->Initialize();
+  G4VisManager* visManager = new G4VisExecutive("quite");
+  visManager->Initialize();
 
   // Get the pointer to the User Interface manager
   G4UImanager* UImanager = G4UImanager::GetUIpointer();

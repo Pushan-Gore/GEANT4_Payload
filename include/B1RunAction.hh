@@ -1,5 +1,4 @@
-//
-// ********************************************************************
+
 // * License and Disclaimer                                           *
 // *                                                                  *
 // * The  Geant4 software  is  copyright of the Copyright Holders  of *
@@ -49,6 +48,7 @@ class PersistencyHandler;
 class B1RunAction : public G4UserRunAction
 {
   public:
+    G4Timer timer;
     B1RunAction();
     virtual ~B1RunAction();
 

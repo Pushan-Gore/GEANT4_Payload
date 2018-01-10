@@ -8,5 +8,8 @@ extern G4double plastic_energy_dep;
 extern G4double csi_energy_dep;
 extern G4double non_primary_energy;
 extern G4long scintillation_count;
+
+extern char filename[20];
+#define LOGNAME_FORMAT "results/%Y%m%d_%H%M%S"
 #endif
 

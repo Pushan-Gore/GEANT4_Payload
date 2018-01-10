@@ -57,14 +57,14 @@ set(LIBS_BOOST boost_regex)
 
 #------ zlib ------#
 # Find zlib package
-#find_package(ZLIB REQUIRED)
+find_package(ZLIB REQUIRED)
 
 # Add include directories to the list of directories searched by the compiler for include files:
 
-#include_directories(${ZLIB_INCLUDE_DIRS})
+include_directories(${ZLIB_INCLUDE_DIRS})
 
 # Set zlib library list
-#set(LIBS_ZLIB ${ZLIB_LIBRARIES})
+set(LIBS_ZLIB ${ZLIB_LIBRARIES})
 
 #------ GODDeSS ------#
 # Locate GODDeSS
@@ -111,6 +111,7 @@ set(PAYLOAD_SCRIPTS
   vis.mac
   pdf.mac
   pdf_400_to_450.mac
+  g4sipm.mac
   )
 
 foreach(_script ${PAYLOAD_SCRIPTS})

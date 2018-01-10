@@ -100,7 +100,6 @@ G4VPhysicalVolume* B1DetectorConstruction::Construct()
             density, kStateGas, temperature, pressure);
 
     /* Added to test RINDEX of vacuum */
-    /*
        const G4int N_RINDEX_VAC = 2 ;                                             
        G4double X_RINDEX_VAC[N_RINDEX_VAC] = {h_Planck*c_light/lambda_max, h_Planck*c_light/lambda_min} ; 
        G4double RINDEX_VAC[N_RINDEX_VAC] = {1, 1};                       
@@ -110,7 +109,6 @@ G4VPhysicalVolume* B1DetectorConstruction::Construct()
        MPT_PMT->DumpTable();
 
        world_mat->SetMaterialPropertiesTable(MPT_PMT);   
-       */ 
     /* Remove block till here */
 
     G4Box* solidWorld =    
@@ -242,6 +240,9 @@ G4VPhysicalVolume* B1DetectorConstruction::Construct()
 
     /* End of Detector and crystal construction */
 
+    // Build SIPM
+    housing->setPosition(G4ThreeVector(0., 0., ((-housing->getDz() / 2.)+ 5)*cm));
+    housing->buildAndPlace(physWorld);
 
     //G4cout << G4endl << "The materials defined are : " << G4endl << G4endl;  
     //G4cout << *(G4Material::GetMaterialTable()) << G4endl; 

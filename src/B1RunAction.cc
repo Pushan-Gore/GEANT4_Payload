@@ -44,6 +44,7 @@
 #include "G4UnitsTable.hh"
 #include "G4SystemOfUnits.hh"
 #include "counts.hh"
+#include <time.h>
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -63,10 +64,6 @@ B1RunAction::B1RunAction()
   new G4UnitDefinition("microgray", "microGy" , "Dose", microgray);
   new G4UnitDefinition("nanogray" , "nanoGy"  , "Dose", nanogray);
   new G4UnitDefinition("picogray" , "picoGy"  , "Dose", picogray); 
-
-  /* Persistency for g4sipm */
-  persistencyHandler = new PersistencyHandler(PersistVisitorFactory::getInstance()->create("persistency"));
-
 
   // Register accumulable to the accumulable manager
   G4AccumulableManager* accumulableManager = G4AccumulableManager::Instance();
@@ -98,12 +95,33 @@ void B1RunAction::BeginOfRunAction(const G4Run*)
   csi_energy_dep = 0;
   non_primary_energy = 0;
   scintillation_count = 0;
+
+  /* Persistency for g4sipm */
+  time_t now = time(0);
+  strftime(filename, sizeof(filename), LOGNAME_FORMAT, localtime(&now));
+  G4cout << "Filename : " << filename;
+  persistencyHandler = new PersistencyHandler(PersistVisitorFactory::getInstance()->create(filename));
+  // Adding the persisteny model for G4SiPM
+  timer.Start();
+  persistencyHandler->open(filename);
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 void B1RunAction::EndOfRunAction(const G4Run* run)
 {
+  // Persist run settings.                                               
+  persistencyHandler->persist(G4SipmUiMessenger::getInstance());         
+  persistencyHandler->persist(ParticleSourceMessenger::getInstance());   
+  // Get detector.                                                       
+  const B1DetectorConstruction* detector =                                 
+          (const B1DetectorConstruction*) G4RunManager::GetRunManager()->GetUserDetectorConstruction();
+  persistencyHandler->persist(detector->getSipmHousing()->getSipm()->getModel());
+  persistencyHandler->persist(detector->getSipmHousing()->getSipm()->getModel()->getVoltageTraceModel());
+  // Close output.                                                       
+  persistencyHandler->close();                                           
+  timer.Stop();
+  
   G4int nofEvents = run->GetNumberOfEvent();
   if (nofEvents == 0) return;
 
@@ -194,6 +212,8 @@ void B1RunAction::EndOfRunAction(const G4Run* run)
      << G4endl
      << "------------------------------------------------------------"
      << G4endl;
+   
+  std::cout << "RunAction::EndOfRunAction(): total run time (" << timer << ")." << std::endl;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

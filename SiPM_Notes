@@ -1,0 +1,2 @@
+Physics List has to be changed because the particles are stopped at the detector
+Changed  opticalPhysics->SetInvokeSD(false); in QBBC() source file - THIS DIDNT HELP
